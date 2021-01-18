@@ -1,9 +1,9 @@
 import React from "react";
 
-const Account = () => (
+const AccountPage = () => (
     <div>
         <h1>Account component</h1>
     </div>
 )
 
-export default Account;
+export default AccountPage;

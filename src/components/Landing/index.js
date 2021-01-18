@@ -1,9 +1,10 @@
 import React from "react";
 
-const Landing = () => (
+const LandingPage = () => (
     <div>
-        <h1>Landing Page</h1>
+        <h1>PrioritiseME</h1>
+        <h2>Welcome to the world of your priorities</h2>
     </div>
 )
 
-export default Landing;
+export default LandingPage;
