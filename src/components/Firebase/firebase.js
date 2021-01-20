@@ -1,3 +1,5 @@
+import app from "firebase/app";
+import "firebase/auth";
 
 const devConfig = {
     apiKey: process.env.REACT_APP_DEV_API_KEY,
@@ -20,3 +22,34 @@ const prodConfig = {
 };
 
 const firebaseConfig = process.env.NODE_ENV === "production" ? prodConfig : devConfig;
+
+class Firebase {
+    constructor() {
+        app.initializeApp(firebaseConfig);
+
+        this.auth = app.auth();
+    }
+
+    // ** Authentication API
+
+    // This method creates user with email and password at firebase endpoint.
+    doCreatUserWithEmailAndPassword = (email, password) =>
+        this.auth.createUserWithEmailAndPassword(email, password);
+
+    // This method allows logging in/singing up with email and password
+    doSignInWithEmailAndPassword = (email, password) =>
+        this.auth.signInWithEmailAndPassword(email, password);
+
+    // This method signs out user
+    doSignOut = () => this.auth.signOut();
+
+    // This method resets user's password
+    doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
+
+    // This method changes user's password
+    doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
+
+
+}
+
+export default Firebase;
