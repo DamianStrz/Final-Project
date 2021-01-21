@@ -1,15 +1,20 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
+import { FirebaseContext } from "../Firebase"
 import * as ROUTES from "../../constants/routes";
 
 const SignUpPage = () => (
     <div>
-        <h1>Sign Up page</h1>
-        <SignUpForm/>
+        <h1>Sign Up, have priorities!</h1>
+        <FirebaseContext.Consumer>
+
+            {firebase => <SignUpForm firebase={firebase}/>}
+
+        </FirebaseContext.Consumer>
+
     </div>
 )
-
 
 const INITIAL_STATE = {
     username: "",
@@ -27,15 +32,34 @@ class SignUpForm extends Component {
     }
 
     onSubmit = e => {
+        const { username, email, passwordOne } = this.state;
 
-    }
+        /* Thanks Firebase Context there is an access to Firebase instance from
+        FirebaseContextProvider. When the firebase object is achievable SignUpPage
+        renders SignUpForm component with props firebase, which is firebase.
+
+        The SignUpForm component cant take the firebase from props and we cane use
+        it in methods down below as follows.
+
+        */
+
+        this.props.firebase
+            .doCreatUserWithEmailAndPassword(email, passwordOne)
+            .then(authUser => {
+                this.setState({ ...INITIAL_STATE })
+            })
+            .catch(error => {
+                this.setState({ error })
+            })
+        e.preventDefault();
+    };
 
     onChange = e => {
         const {name, value} = e.target;
 
         this.setState({ [name]:value })
 
-    }
+    };
 
     render() {
 
