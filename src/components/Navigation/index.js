@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import SignOutButton from "../SignOut";
 import * as ROUTES from "../../constants/routes";
 
+import { AuthUserContext } from "../Session";
+
 /*
 * Component Navigation has two versions based on authUser value which is the
 * state of the App component. If authUser is null component Navigation will render
@@ -11,9 +13,12 @@ import * as ROUTES from "../../constants/routes";
 *
 * */
 
-const Navigation = ({authUser}) => (
+const Navigation = () => (
     <div>
-        {authUser ? <NavigationAuth/> : <NavigationNonAuth/>}
+        <AuthUserContext.Consumer>
+            {authUser => authUser ? <NavigationAuth/> : <NavigationNonAuth/>}
+        </AuthUserContext.Consumer>
+
     </div>
 )
 
