@@ -50,7 +50,7 @@ class SignUpFormBase extends Component {
                         email,
                     })
             })
-            .then(authUser => {
+            .then(() => {
                 this.setState({ ...INITIAL_STATE })
                 this.props.history.push(ROUTES.PRIORITIES);
             })
