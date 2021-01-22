@@ -43,10 +43,10 @@ class PasswordForgetFormBase extends Component {
                 this.setState({...INITIAL_STATE});
                 /*
                  Here we need special component to be rendered when password
-                 reset link successfully sent. Now user is redirected to landing
-                 page.
+                 reset link successfully sent. Now user is redirected to
+                 Sign In page.
                 */
-                this.props.history.push(ROUTES.LANDING);
+                this.props.history.push(ROUTES.SIGN_IN);
             })
             .catch(error => {
                 this.setState({ error })
