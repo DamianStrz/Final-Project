@@ -46,9 +46,18 @@ class AddTask extends Component {
         e.preventDefault();
     };
 
+    handleDeleteTask = (task) => {
+      console.log(this.state.data.filter(el => el.taskName !== task));
+      this.setState({...this.state, data:[
+          ...this.state.data.filter(el => el.taskName !== task)]})
+
+    }
+
+
+
     render() {
         const { taskName, priority, formality, urgency } = this.state;
-        console.log(this.state);
+        // console.log(this.state);
         const isInvalid =
             taskName === "" ||
             priority === 0 ||
@@ -69,10 +78,11 @@ class AddTask extends Component {
                             Formality: {el.formality}, Urgency: {el.urgency},
                             Priority rating:
                             {(+el.priority*1.25) + +el.formality + +el.urgency}
+                            <DeleteTaskButton onClick={() => this.handleDeleteTask(el.taskName)} />
+                            <DoneTaskButton/>
                         </li>
                     ))}
                 </ul>
-
 
 
                 <form onSubmit={this.onSubmit}>
@@ -120,7 +130,14 @@ class AddTask extends Component {
     }
 }
 
+const DeleteTaskButton = (props) => <button type="button" onClick={props.onClick}>Delete</button>
+
+const DoneTaskButton = () => <button>Done</button>
+
+
 
 const condition = authUser => !!authUser;
 
 export default withAuthorization(condition)(PrioritiesPage);
+
+export { DeleteTaskButton, DoneTaskButton };
