@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { withAuthorization } from "../Session"
 import * as ROUTES from "../../constants/routes"
@@ -15,7 +15,7 @@ const PrioritiesPage = () => (
     </div>
 )
 
-const INITIAL_STATE = {
+let INITIAL_STATE = {
     taskName: "",
     priority: 0,
     formality: 0,
@@ -23,16 +23,51 @@ const INITIAL_STATE = {
     data: [],
 }
 
+// let INITIAL_STATE_PERSONAL = {
+// taskName: "",
+//     priority: 0,
+//     formality: 0,
+//     urgency: 0,
+//     data: [],
+// // }
+//
+// const INITIAL_STATE_WORK = {
+//     taskName: "",
+//     priority: 0,
+//     formality: 0,
+//     urgency: 0,
+//     data: [],
+// }
+//
+// const INITIAL_STATE_GROWTH = {
+//     taskName: "",
+//     priority: 0,
+//     formality: 0,
+//     urgency: 0,
+//     data: [],
+// }
 
 let DONE_PERSONAL_TASKS_ARRAY = [];
 let DONE_WORK_TASKS_ARRAY = [];
 let DONE_GROWTH_TASKS_ARRAY = [];
 
+let DELETED_PERSONAL_TASKS_ARRAY = [];
+let DELETED_WORK_TASKS_ARRAY = [];
+let DELETED_GROWTH_TASKS_ARRAY = [];
+
 class AddTask extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { ...INITIAL_STATE };
+        this.state = {...INITIAL_STATE};
+
+        // if (this.props.tab === "personal") {
+        //     this.state = { ...INITIAL_STATE_PERSONAL };
+        // } else if (this.props.tab === "work") {
+        //     this.state = { ...INITIAL_STATE_WORK };
+        // } else {
+        //     this.state = { ...INITIAL_STATE_GROWTH };
+        // }
 
     }
 
@@ -44,22 +79,80 @@ class AddTask extends Component {
 
     onSubmit = (e) => {
         const { taskName, priority, formality, urgency} = this.state;
+        // const name = e.target.name;
+        //
+        //
+        // if (name === "personal") {
+        //     this.setState({ ...INITIAL_STATE_PERSONAL, data: [...this.state.data, {
+        //             "taskName": taskName,
+        //             "priority": priority,
+        //             "formality": formality,
+        //             "urgency": urgency
+        //         }]}
+        //     );
+        // } else if (name === "work") {
+        //     this.setState({ ...INITIAL_STATE_WORK, data: [...this.state.data, {
+        //             "taskName": taskName,
+        //             "priority": priority,
+        //             "formality": formality,
+        //             "urgency": urgency
+        //         }]}
+        //     );
+        // } else {
+        //     this.setState({ ...INITIAL_STATE_GROWTH, data: [...this.state.data, {
+        //             "taskName": taskName,
+        //             "priority": priority,
+        //             "formality": formality,
+        //             "urgency": urgency
+        //         }]}
+        //     );
+        // }
+
         this.setState({ ...INITIAL_STATE, data: [...this.state.data, {
             "taskName": taskName,
             "priority": priority,
             "formality": formality,
             "urgency": urgency
-            }] }
-            );
+            }]}
+        );
+
 
         e.preventDefault();
+        console.log([...this.state.data])
     };
 
     handleDeleteTask = (e) => {
         const task = e.target.id;
-        // console.log(this.state.data.filter(el => el.taskName !== task));
-        this.setState({...this.state, data:[
-          ...this.state.data.filter(el => el.taskName !== task)]})
+        const name = e.target.name;
+
+
+        if (name === "personal") {
+            DELETED_PERSONAL_TASKS_ARRAY = [...DELETED_PERSONAL_TASKS_ARRAY,
+                ...this.state.data.filter(el => el.taskName !== task)];
+
+
+            this.setState({...this.state, data:[
+                    ...DELETED_PERSONAL_TASKS_ARRAY]});
+                    // ...this.state.data.filter(el => el.taskName !== task)]})
+        } else if (name === "work") {
+            DELETED_WORK_TASKS_ARRAY = [...DELETED_WORK_TASKS_ARRAY,
+                ...this.state.data.filter(el => el.taskName !== task)];
+
+            this.setState({...this.state, data:[
+                    ...DELETED_WORK_TASKS_ARRAY]});
+                    // ...this.state.data.filter(el => el.taskName !== task)]})
+        } else {
+            DELETED_GROWTH_TASKS_ARRAY = [...DELETED_GROWTH_TASKS_ARRAY,
+                ...this.state.data.filter(el => el.taskName !== task)];
+
+            this.setState({...this.state, data:[
+                    ...DELETED_GROWTH_TASKS_ARRAY]});
+                    // ...this.state.data.filter(el => el.taskName !== task)]})
+        }
+
+
+        // this.setState({...this.state, data:[
+        //   ...this.state.data.filter(el => el.taskName !== task)]})
 
     }
 
@@ -81,10 +174,7 @@ class AddTask extends Component {
                     ...this.state.data.filter(el => el.taskName !== task)]})
         }
 
-
     }
-
-
 
 
     render() {
@@ -110,7 +200,7 @@ class AddTask extends Component {
                             Formality: {el.formality}, Urgency: {el.urgency},
                             Priority rating:
                             {(+el.priority*1.25) + +el.formality + +el.urgency}
-                            <DeleteTaskButton id={el.taskName} onClick={this.handleDeleteTask} />
+                            <DeleteTaskButton name={this.props.tab} id={el.taskName} onClick={this.handleDeleteTask} />
                             <DoneTaskButton  name={this.props.tab} id={el.taskName} onClick={this.handleDoneTask}/>
                         </li>
                     ))}
@@ -153,7 +243,7 @@ class AddTask extends Component {
                         max="3"
                         placeholder="Set urgency from 1 - 3"
                     />
-                    <button disabled={isInvalid} type="submit">Add task</button>
+                    <button name={this.props.tab} disabled={isInvalid} type="submit">Add task</button>
                 </form>
             </div>
         )
@@ -189,6 +279,9 @@ class TasksSummary extends Component {
             personalTasksDone: [...DONE_PERSONAL_TASKS_ARRAY],
             workTasksDone: [...DONE_WORK_TASKS_ARRAY],
             growthTasksDone: [...DONE_GROWTH_TASKS_ARRAY],
+            personalTasksDeleted: [...DELETED_PERSONAL_TASKS_ARRAY],
+            workTasksDeleted: [...DELETED_WORK_TASKS_ARRAY],
+            growthTasksDeleted: [...DELETED_GROWTH_TASKS_ARRAY]
         };
     }
 
@@ -201,8 +294,7 @@ class TasksSummary extends Component {
                     <h2>High priority tasks done (priority rating >= 5): </h2><p>
                     {this.state.personalTasksDone.filter(el =>
                         ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
-                        .length}
-                </p>
+                        .length}</p>
 
                     <ul>
                         Done tasks:
@@ -227,8 +319,7 @@ class TasksSummary extends Component {
                     <h2>High priority tasks done (priority rating >= 5): </h2><p>
                     {this.state.workTasksDone.filter(el =>
                         ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
-                        .length}
-                </p>
+                        .length}</p>
 
                     <ul>
                         Done tasks:
@@ -253,8 +344,7 @@ class TasksSummary extends Component {
                     <h2>High priority tasks done (priority rating >= 5): </h2><p>
                     {this.state.growthTasksDone.filter(el =>
                         ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
-                        .length}
-                </p>
+                        .length}</p>
 
                     <ul>
                         Done tasks:
@@ -272,10 +362,6 @@ class TasksSummary extends Component {
                             ))}
                     </ul>
                 </div>
-
-
-
-
             </div>
 
 
@@ -283,7 +369,7 @@ class TasksSummary extends Component {
     }
 }
 
-const DeleteTaskButton = (props) => <button id={props.id} type="button" onClick={props.onClick}>Delete</button>
+const DeleteTaskButton = (props) => <button name={props.name} id={props.id} type="button" onClick={props.onClick}>Delete</button>
 
 const DoneTaskButton = (props) => <button name={props.name} id={props.id}  type="button" onClick={props.onClick}>Done</button>
 
