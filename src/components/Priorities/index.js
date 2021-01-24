@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import { withAuthorization } from "../Session"
+import * as ROUTES from "../../constants/routes"
 
 const PrioritiesPage = () => (
     <div>
         <h1>See your priorities</h1>
         <p>Access only for signed in user</p>
         <PrioritiesNavigation/>
-        <AddTask/>
+
+        <hr/>
+
     </div>
 )
 
@@ -59,8 +62,7 @@ class AddTask extends Component {
 
     handleDoneTask = (e) => {
         const task = e.target.id;
-        console.log(this.state.data.filter(el => el.taskName === task));
-        DONE_TASK_ARRAY = this.state.data.filter(el => el.taskName === task);
+        DONE_TASK_ARRAY = [...this.state.data.filter(el => el.taskName === task)];
         console.log(DONE_TASK_ARRAY);
         this.setState({...this.state, data:[
                 ...this.state.data.filter(el => el.taskName !== task)]})
@@ -155,25 +157,67 @@ class AddTask extends Component {
     }
 }
 
+class AddTaskPersonal extends Component {
+
+    render() {
+        return <AddTask/>
+    }
+}
+
+class AddTaskWork extends Component {
+
+    render() {
+        return <AddTask/>
+    }
+}
+
+class AddTaskGrowth extends Component {
+
+    render() {
+        return <AddTask/>
+    }
+}
+
+class TasksSummary extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {...DONE_TASK_ARRAY};
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>Personal Summary</h1>
+                <h2>Tasks done: </h2><p>{this.state.length}</p>
+            </div>
+        )
+    }
+}
+
 const DeleteTaskButton = (props) => <button id={props.id} type="button" onClick={props.onClick}>Delete</button>
 
 const DoneTaskButton = (props) => <button id={props.id}  type="button" onClick={props.onClick}>Done</button>
 
 const PrioritiesNavigation = () => (
-    <ul>
-        <li>
-            <Link>Personal</Link>
-        </li>
-        <li>
-            <Link>Work</Link>
-        </li>
-        <li>
-            <Link>Growth</Link>
-        </li>
-        <li>
-            <Link>Summary</Link>
-        </li>
-    </ul>
+    <div>
+        <p>Choose priorities tab:</p>
+        <ul>
+            <li>
+                <Link to={ROUTES.PRIORITIES_PERSONAL}>Personal</Link>
+            </li>
+            <li>
+                <Link to={ROUTES.PRIORITIES_WORK}>Work</Link>
+            </li>
+            <li>
+                <Link to={ROUTES.PRIORITIES_GROWTH}>Growth</Link>
+            </li>
+            <li>
+                <Link to={ROUTES.PRIORITIES_SUMMARY}>Summary</Link>
+            </li>
+        </ul>
+    </div>
+
 )
 
 
@@ -181,4 +225,12 @@ const condition = authUser => !!authUser;
 
 export default withAuthorization(condition)(PrioritiesPage);
 
-export { DeleteTaskButton, DoneTaskButton };
+export {
+    DeleteTaskButton,
+    DoneTaskButton,
+    PrioritiesNavigation,
+    AddTask,
+    AddTaskPersonal,
+    AddTaskGrowth,
+    AddTaskWork,
+    TasksSummary };
