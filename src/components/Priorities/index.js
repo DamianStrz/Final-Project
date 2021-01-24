@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 import { withAuthorization } from "../Session"
 
@@ -6,6 +7,7 @@ const PrioritiesPage = () => (
     <div>
         <h1>See your priorities</h1>
         <p>Access only for signed in user</p>
+        <PrioritiesNavigation/>
         <AddTask/>
     </div>
 )
@@ -18,6 +20,7 @@ const INITIAL_STATE = {
     data: [],
 }
 
+export let DONE_TASK_ARRAY = [];
 
 class AddTask extends Component {
     constructor(props) {
@@ -46,14 +49,22 @@ class AddTask extends Component {
         e.preventDefault();
     };
 
-    handleDeleteTask = (task) => {
-      console.log(this.state.data.filter(el => el.taskName !== task));
-      this.setState({...this.state, data:[
+    handleDeleteTask = (e) => {
+        const task = e.target.id;
+        // console.log(this.state.data.filter(el => el.taskName !== task));
+        this.setState({...this.state, data:[
           ...this.state.data.filter(el => el.taskName !== task)]})
 
     }
 
-
+    handleDoneTask = (e) => {
+        const task = e.target.id;
+        console.log(this.state.data.filter(el => el.taskName === task));
+        DONE_TASK_ARRAY = this.state.data.filter(el => el.taskName === task);
+        console.log(DONE_TASK_ARRAY);
+        this.setState({...this.state, data:[
+                ...this.state.data.filter(el => el.taskName !== task)]})
+    }
 
     render() {
         const { taskName, priority, formality, urgency } = this.state;
@@ -78,10 +89,26 @@ class AddTask extends Component {
                             Formality: {el.formality}, Urgency: {el.urgency},
                             Priority rating:
                             {(+el.priority*1.25) + +el.formality + +el.urgency}
-                            <DeleteTaskButton onClick={() => this.handleDeleteTask(el.taskName)} />
-                            <DoneTaskButton/>
+                            <DeleteTaskButton id={el.taskName} onClick={this.handleDeleteTask} />
+                            <DoneTaskButton id={el.taskName} onClick={this.handleDoneTask}/>
                         </li>
                     ))}
+                </ul>
+
+                <ul>
+                    Done tasks list:
+                    {DONE_TASK_ARRAY
+                        .sort((a,b) => (
+                            (+b.priority*1.25) + +b.formality + +b.urgency ) -
+                            ((+a.priority*1.25) + +a.formality + +a.urgency))
+                        .map((el, index) => (
+                            <li key={index}>
+                                Task: {el.taskName}, Priority: {el.priority},
+                                Formality: {el.formality}, Urgency: {el.urgency},
+                                Priority rating:
+                                {(+el.priority*1.25) + +el.formality + +el.urgency}}
+                            </li>
+                        ))}
                 </ul>
 
 
@@ -123,17 +150,31 @@ class AddTask extends Component {
                     />
                     <button disabled={isInvalid} type="submit">Add task</button>
                 </form>
-
-
             </div>
         )
     }
 }
 
-const DeleteTaskButton = (props) => <button type="button" onClick={props.onClick}>Delete</button>
+const DeleteTaskButton = (props) => <button id={props.id} type="button" onClick={props.onClick}>Delete</button>
 
-const DoneTaskButton = () => <button>Done</button>
+const DoneTaskButton = (props) => <button id={props.id}  type="button" onClick={props.onClick}>Done</button>
 
+const PrioritiesNavigation = () => (
+    <ul>
+        <li>
+            <Link>Personal</Link>
+        </li>
+        <li>
+            <Link>Work</Link>
+        </li>
+        <li>
+            <Link>Growth</Link>
+        </li>
+        <li>
+            <Link>Summary</Link>
+        </li>
+    </ul>
+)
 
 
 const condition = authUser => !!authUser;
