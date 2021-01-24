@@ -9,7 +9,12 @@ import Navigation from "../Navigation";
 import LandingPage from "../Landing";
 import SignUpPage from "../SignUp";
 import SignInPage from "../SignIn";
-import PrioritiesPage, {AddTask, AddTaskGrowth, AddTaskWork, TasksSummary} from "../Priorities"
+import PrioritiesPage, {
+    AddTaskGrowth,
+    AddTaskPersonal,
+    AddTaskWork,
+    TasksSummary
+} from "../Priorities"
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
 import PasswordForgetPage from "../PasswordForget";
@@ -33,7 +38,7 @@ const App = () => (
         </Switch>
 
         <Switch>
-            <Route path={ROUTES.PRIORITIES_PERSONAL} component={AddTask}/>
+            <Route path={ROUTES.PRIORITIES_PERSONAL} component={AddTaskPersonal}/>
             <Route path={ROUTES.PRIORITIES_WORK} component={AddTaskWork}/>
             <Route path={ROUTES.PRIORITIES_GROWTH} component={AddTaskGrowth}/>
             <Route path={ROUTES.PRIORITIES_SUMMARY} component={TasksSummary}/>

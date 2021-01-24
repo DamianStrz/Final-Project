@@ -23,7 +23,10 @@ const INITIAL_STATE = {
     data: [],
 }
 
-export let DONE_TASK_ARRAY = [];
+
+let DONE_PERSONAL_TASKS_ARRAY = [];
+let DONE_WORK_TASKS_ARRAY = [];
+let DONE_GROWTH_TASKS_ARRAY = [];
 
 class AddTask extends Component {
     constructor(props) {
@@ -62,24 +65,40 @@ class AddTask extends Component {
 
     handleDoneTask = (e) => {
         const task = e.target.id;
-        DONE_TASK_ARRAY = [...this.state.data.filter(el => el.taskName === task)];
-        console.log(DONE_TASK_ARRAY);
-        this.setState({...this.state, data:[
-                ...this.state.data.filter(el => el.taskName !== task)]})
+        const name = e.target.name;
+
+        if (name === "personal") {
+            DONE_PERSONAL_TASKS_ARRAY = [...DONE_PERSONAL_TASKS_ARRAY, ...this.state.data.filter(el => el.taskName === task)];
+            this.setState({...this.state, data:[
+                    ...this.state.data.filter(el => el.taskName !== task)]})
+        } else if (name === "work") {
+            DONE_WORK_TASKS_ARRAY = [...DONE_WORK_TASKS_ARRAY, ...this.state.data.filter(el => el.taskName === task)];
+            this.setState({...this.state, data:[
+                    ...this.state.data.filter(el => el.taskName !== task)]})
+        } else {
+            DONE_GROWTH_TASKS_ARRAY = [...DONE_GROWTH_TASKS_ARRAY, ...this.state.data.filter(el => el.taskName === task)];
+            this.setState({...this.state, data:[
+                    ...this.state.data.filter(el => el.taskName !== task)]})
+        }
+
+
     }
+
+
+
 
     render() {
         const { taskName, priority, formality, urgency } = this.state;
-        // console.log(this.state);
         const isInvalid =
             taskName === "" ||
             priority === 0 ||
             formality === 0 ||
             urgency === 0
 
+
         return(
             <div>
-                <h2>Add your task</h2>
+                <h2>Add your task </h2>
                 <ul> Your tasks list:
                     {this.state.data
                         .sort((a,b) => (
@@ -92,25 +111,9 @@ class AddTask extends Component {
                             Priority rating:
                             {(+el.priority*1.25) + +el.formality + +el.urgency}
                             <DeleteTaskButton id={el.taskName} onClick={this.handleDeleteTask} />
-                            <DoneTaskButton id={el.taskName} onClick={this.handleDoneTask}/>
+                            <DoneTaskButton  name={this.props.tab} id={el.taskName} onClick={this.handleDoneTask}/>
                         </li>
                     ))}
-                </ul>
-
-                <ul>
-                    Done tasks list:
-                    {DONE_TASK_ARRAY
-                        .sort((a,b) => (
-                            (+b.priority*1.25) + +b.formality + +b.urgency ) -
-                            ((+a.priority*1.25) + +a.formality + +a.urgency))
-                        .map((el, index) => (
-                            <li key={index}>
-                                Task: {el.taskName}, Priority: {el.priority},
-                                Formality: {el.formality}, Urgency: {el.urgency},
-                                Priority rating:
-                                {(+el.priority*1.25) + +el.formality + +el.urgency}}
-                            </li>
-                        ))}
                 </ul>
 
 
@@ -160,21 +163,21 @@ class AddTask extends Component {
 class AddTaskPersonal extends Component {
 
     render() {
-        return <AddTask/>
+        return <AddTask tab="personal"/>
     }
 }
 
 class AddTaskWork extends Component {
 
     render() {
-        return <AddTask/>
+        return <AddTask tab="work"/>
     }
 }
 
 class AddTaskGrowth extends Component {
 
     render() {
-        return <AddTask/>
+        return <AddTask tab="growth"/>
     }
 }
 
@@ -182,22 +185,107 @@ class TasksSummary extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {...DONE_TASK_ARRAY};
+        this.state = {
+            personalTasksDone: [...DONE_PERSONAL_TASKS_ARRAY],
+            workTasksDone: [...DONE_WORK_TASKS_ARRAY],
+            growthTasksDone: [...DONE_GROWTH_TASKS_ARRAY],
+        };
     }
 
     render() {
         return (
             <div>
-                <h1>Personal Summary</h1>
-                <h2>Tasks done: </h2><p>{this.state.length}</p>
+                <div>
+                    <h1>Personal Summary</h1>
+                    <h2>Tasks done: </h2><p>{this.state.personalTasksDone.length}</p>
+                    <h2>High priority tasks done (priority rating >= 5): </h2><p>
+                    {this.state.personalTasksDone.filter(el =>
+                        ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
+                        .length}
+                </p>
+
+                    <ul>
+                        Done tasks:
+                        {this.state.personalTasksDone
+                            .sort((a,b) => (
+                                (+b.priority*1.25) + +b.formality + +b.urgency ) -
+                                ((+a.priority*1.25) + +a.formality + +a.urgency))
+                            .map((el, index) => (
+                                <li key={index}>
+                                    Task: {el.taskName}, Priority: {el.priority},
+                                    Formality: {el.formality}, Urgency: {el.urgency},
+                                    Priority rating:
+                                    {(+el.priority*1.25) + +el.formality + +el.urgency}
+                                </li>
+                            ))}
+                    </ul>
+                </div>
+
+                <div>
+                    <h1>Work Summary</h1>
+                    <h2>Tasks done: </h2><p>{this.state.workTasksDone.length}</p>
+                    <h2>High priority tasks done (priority rating >= 5): </h2><p>
+                    {this.state.workTasksDone.filter(el =>
+                        ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
+                        .length}
+                </p>
+
+                    <ul>
+                        Done tasks:
+                        {this.state.workTasksDone
+                            .sort((a,b) => (
+                                (+b.priority*1.25) + +b.formality + +b.urgency ) -
+                                ((+a.priority*1.25) + +a.formality + +a.urgency))
+                            .map((el, index) => (
+                                <li key={index}>
+                                    Task: {el.taskName}, Priority: {el.priority},
+                                    Formality: {el.formality}, Urgency: {el.urgency},
+                                    Priority rating:
+                                    {(+el.priority*1.25) + +el.formality + +el.urgency}
+                                </li>
+                            ))}
+                    </ul>
+                </div>
+
+                <div>
+                    <h1>Growth Summary</h1>
+                    <h2>Tasks done: </h2><p>{this.state.growthTasksDone.length}</p>
+                    <h2>High priority tasks done (priority rating >= 5): </h2><p>
+                    {this.state.growthTasksDone.filter(el =>
+                        ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
+                        .length}
+                </p>
+
+                    <ul>
+                        Done tasks:
+                        {this.state.growthTasksDone
+                            .sort((a,b) => (
+                                (+b.priority*1.25) + +b.formality + +b.urgency ) -
+                                ((+a.priority*1.25) + +a.formality + +a.urgency))
+                            .map((el, index) => (
+                                <li key={index}>
+                                    Task: {el.taskName}, Priority: {el.priority},
+                                    Formality: {el.formality}, Urgency: {el.urgency},
+                                    Priority rating:
+                                    {(+el.priority*1.25) + +el.formality + +el.urgency}
+                                </li>
+                            ))}
+                    </ul>
+                </div>
+
+
+
+
             </div>
+
+
         )
     }
 }
 
 const DeleteTaskButton = (props) => <button id={props.id} type="button" onClick={props.onClick}>Delete</button>
 
-const DoneTaskButton = (props) => <button id={props.id}  type="button" onClick={props.onClick}>Done</button>
+const DoneTaskButton = (props) => <button name={props.name} id={props.id}  type="button" onClick={props.onClick}>Done</button>
 
 const PrioritiesNavigation = () => (
     <div>
