@@ -1,10 +1,18 @@
 import React from "react";
 
+import { Container, Row, Col } from "react-bootstrap"
+
 const LandingPage = () => (
-    <div>
-        <h1>PrioritiseME</h1>
-        <h2>Welcome to the world of your priorities</h2>
-    </div>
+    <Container fluid>
+        <Row>
+            <Col>
+                <h1 className="text-center">PrioritiseME</h1>
+                <h2 className="text-center">Welcome to the world of your priorities</h2>
+            </Col>
+        </Row>
+
+    </Container>
+
 )
 
 export default LandingPage;

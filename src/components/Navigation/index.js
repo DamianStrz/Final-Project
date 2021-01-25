@@ -1,10 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import SignOutButton from "../SignOut";
 import * as ROUTES from "../../constants/routes";
 
 import { AuthUserContext } from "../Session";
+
+import { Nav } from "react-bootstrap";
 
 /*
 * Component Navigation has two versions based on authUser value which is the
@@ -14,43 +16,43 @@ import { AuthUserContext } from "../Session";
 * */
 
 const Navigation = () => (
-    <div>
+    <>
         <AuthUserContext.Consumer>
             {authUser => authUser ? <NavigationAuth/> : <NavigationNonAuth/>}
         </AuthUserContext.Consumer>
 
-    </div>
+    </>
 )
 
 const NavigationAuth = () => (
-    <ul>
-        <li>
-            <Link to={ROUTES.LANDING}>Landing page</Link>
-        </li>
-        <li>
-            <Link to={ROUTES.PRIORITIES}>Your priorities</Link>
-        </li>
-        <li>
-            <Link to={ROUTES.ACCOUNT}>Account</Link>
-        </li>
-        <li>
-            <Link to={ROUTES.ADMIN}>Admin</Link>
-        </li>
-        <li>
+    <Nav className="justify-content-center" activeKey={ROUTES.LANDING}>
+        <Nav.Item>
+            <Nav.Link as={NavLink} to={ROUTES.LANDING}>Landing page</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+            <Nav.Link eventKey={ROUTES.PRIORITIES} as={NavLink} to={ROUTES.PRIORITIES}>Your priorities</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+            <Nav.Link eventKey={ROUTES.ACCOUNT} as={NavLink} to={ROUTES.ACCOUNT}>Account</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+            <Nav.Link eventKey={ROUTES.PRIORITIES} as={NavLink} to={ROUTES.ADMIN}>Admin</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
             <SignOutButton/>
-        </li>
-    </ul>
+        </Nav.Item>
+    </Nav>
 )
 
 const NavigationNonAuth = () => (
-    <ul>
-        <li>
-            <Link to={ROUTES.LANDING}>Landing page</Link>
-        </li>
-        <li>
-            <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-        </li>
-    </ul>
+    <Nav className="justify-content-center" activeKey={ROUTES.LANDING}>
+        <Nav.Item>
+            <Nav.Link as={NavLink} to={ROUTES.LANDING}>Landing page</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+            <Nav.Link eventKey={ROUTES.SIGN_IN} as={NavLink} to={ROUTES.SIGN_IN}>Sign In</Nav.Link>
+        </Nav.Item>
+    </Nav>
 )
 
 

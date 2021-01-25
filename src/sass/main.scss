@@ -3,7 +3,27 @@
 @import "../sass/components";
 
 
-.test {
-  color: yellow;
-  text-decoration: underline;
+body {
+  background-image: linear-gradient(to right top, #006666, #2c8582, #4ca59e, #6bc7bb, #8ae9d8);;
+  background-repeat: no-repeat;
+  display: block;
+}
+
+footer {
+  font-family: "Garuda", Garuda, serif ;
+  font-size: 0.5rem;
+  color: #FFFFFF;
+}
+
+main {
+  color: #FFFFFF;
+
+}
+
+.nav-link {
+  color: #FFFFFF;
+}
+
+.nav-link:hover{
+  color: lighten(#006666, 50%);
 }
