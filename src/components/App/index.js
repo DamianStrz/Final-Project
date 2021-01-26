@@ -10,10 +10,10 @@ import LandingPage from "../Landing";
 import SignUpPage from "../SignUp";
 import SignInPage from "../SignIn";
 import PrioritiesPage, {
-    AddTaskGrowth,
-    AddTaskPersonal,
-    AddTaskWork,
-    TasksSummary
+    AddTaskGrowthFirebase,
+    AddTaskPersonalFirebase,
+    AddTaskWorkFirebase,
+    TasksSummaryFirebase
 } from "../Priorities"
 import AccountPage from "../Account";
 import AdminPage from "../Admin";
@@ -41,10 +41,10 @@ const App = () => (
             </Switch>
 
             <Switch>
-                <Route path={ROUTES.PRIORITIES_PERSONAL} component={AddTaskPersonal}/>
-                <Route path={ROUTES.PRIORITIES_WORK} component={AddTaskWork}/>
-                <Route path={ROUTES.PRIORITIES_GROWTH} component={AddTaskGrowth}/>
-                <Route path={ROUTES.PRIORITIES_SUMMARY} component={TasksSummary}/>
+                <Route path={ROUTES.PRIORITIES_PERSONAL} component={AddTaskPersonalFirebase}/>
+                <Route path={ROUTES.PRIORITIES_WORK} component={AddTaskWorkFirebase}/>
+                <Route path={ROUTES.PRIORITIES_GROWTH} component={AddTaskGrowthFirebase}/>
+                <Route path={ROUTES.PRIORITIES_SUMMARY} component={TasksSummaryFirebase}/>
             </Switch>
             <Switch>
                 <Route path={ROUTES.ACCOUNT} component={AccountPage}/>

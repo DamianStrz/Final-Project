@@ -23,6 +23,8 @@ let INITIAL_STATE = {
     data: [],
 }
 
+
+
 // let INITIAL_STATE_PERSONAL = {
 // taskName: "",
 //     priority: 0,
@@ -79,6 +81,9 @@ class AddTask extends Component {
 
     onSubmit = (e) => {
         const { taskName, priority, formality, urgency} = this.state;
+        const userID = this.props.firebase.auth.currentUser.uid;
+
+        this.props.firebase.user(userID).on("value", snapshot => console.log(snapshot.val()))
         // const name = e.target.name;
         //
         //
@@ -118,7 +123,6 @@ class AddTask extends Component {
 
 
         e.preventDefault();
-        console.log([...this.state.data])
     };
 
     handleDeleteTask = (e) => {
@@ -253,27 +257,29 @@ class AddTask extends Component {
 class AddTaskPersonal extends Component {
 
     render() {
-        return <AddTask tab="personal"/>
+        return <AddTask firebase={this.props.firebase} tab="personal"/>
     }
 }
 
 class AddTaskWork extends Component {
 
     render() {
-        return <AddTask tab="work"/>
+        return <AddTask firebase={this.props.firebase} tab="work"/>
     }
 }
 
 class AddTaskGrowth extends Component {
 
     render() {
-        return <AddTask tab="growth"/>
+        return <AddTask firebase={this.props.firebase} tab="growth"/>
     }
 }
 
 class TasksSummary extends Component {
     constructor(props) {
         super(props);
+
+        this.firebase = this.props.firebase;
 
         this.state = {
             personalTasksDone: [...DONE_PERSONAL_TASKS_ARRAY],
@@ -391,7 +397,6 @@ const PrioritiesNavigation = () => (
             </li>
         </ul>
     </div>
-
 )
 
 
@@ -399,12 +404,18 @@ const condition = authUser => !!authUser;
 
 export default withAuthorization(condition)(PrioritiesPage);
 
+const AddTaskPersonalFirebase = withAuthorization(condition)(AddTaskPersonal);
+const AddTaskWorkFirebase = withAuthorization(condition)(AddTaskWork);
+const AddTaskGrowthFirebase = withAuthorization(condition)(AddTaskGrowth);
+const TasksSummaryFirebase = withAuthorization(condition)(TasksSummary);
+;
+
 export {
     DeleteTaskButton,
     DoneTaskButton,
     PrioritiesNavigation,
     AddTask,
-    AddTaskPersonal,
-    AddTaskGrowth,
-    AddTaskWork,
-    TasksSummary };
+    AddTaskPersonalFirebase,
+    AddTaskGrowthFirebase,
+    AddTaskWorkFirebase,
+    TasksSummaryFirebase }
