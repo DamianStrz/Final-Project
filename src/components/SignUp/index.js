@@ -48,10 +48,10 @@ class SignUpFormBase extends Component {
                     .set({
                         username,
                         email,
-                        taskName: "",
-                        priority: 0,
-                        formality: 0,
-                        urgency: 0,
+                        personalData: [],
+                        workData: [],
+                        growthData: [],
+
                     })
             })
             .then(() => {

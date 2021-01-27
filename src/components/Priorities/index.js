@@ -15,15 +15,18 @@ const PrioritiesPage = () => (
     </div>
 )
 
+
 let INITIAL_STATE = {
     taskName: "",
     priority: 0,
     formality: 0,
     urgency: 0,
     data: [],
+    personalDataInitial: [],
+    workDataInitial: [],
+    growthDataInitial: [],
+    error: null
 }
-
-
 
 // let INITIAL_STATE_PERSONAL = {
 // taskName: "",
@@ -84,42 +87,69 @@ class AddTask extends Component {
         const userID = this.props.firebase.auth.currentUser.uid;
 
         this.props.firebase.user(userID).on("value", snapshot => console.log(snapshot.val()))
-        // const name = e.target.name;
-        //
-        //
-        // if (name === "personal") {
-        //     this.setState({ ...INITIAL_STATE_PERSONAL, data: [...this.state.data, {
-        //             "taskName": taskName,
-        //             "priority": priority,
-        //             "formality": formality,
-        //             "urgency": urgency
-        //         }]}
-        //     );
-        // } else if (name === "work") {
-        //     this.setState({ ...INITIAL_STATE_WORK, data: [...this.state.data, {
-        //             "taskName": taskName,
-        //             "priority": priority,
-        //             "formality": formality,
-        //             "urgency": urgency
-        //         }]}
-        //     );
-        // } else {
-        //     this.setState({ ...INITIAL_STATE_GROWTH, data: [...this.state.data, {
-        //             "taskName": taskName,
-        //             "priority": priority,
-        //             "formality": formality,
-        //             "urgency": urgency
-        //         }]}
-        //     );
-        // }
+        console.log(this.props.firebase.auth.currentUser);
 
-        this.setState({ ...INITIAL_STATE, data: [...this.state.data, {
-            "taskName": taskName,
-            "priority": priority,
-            "formality": formality,
-            "urgency": urgency
-            }]}
-        );
+
+        const name = e.target.name;
+
+        if (name === "personal") {
+            this.props.firebase
+                .user(userID)
+                .update( {personalData: [...this.state.personalDataInitial]})
+                .then(() => {
+                    this.setState({ ...INITIAL_STATE,
+                        personalDataInitial: [...this.state.personalDataInitial, {
+                            "taskName": taskName,
+                            "priority": priority,
+                            "formality": formality,
+                            "urgency": urgency
+                        }]});
+                })
+                .catch(error => {
+                    this.setState({error});
+                })
+
+        } else if (name === "work") {
+            this.props.firebase
+                .user(userID)
+                .update( { workData: [...this.state.workDataInitial]})
+                .then(() => {
+                    this.setState({ ...INITIAL_STATE,
+                        workDataInitial: [...this.state.workDataInitial, {
+                            "taskName": taskName,
+                            "priority": priority,
+                            "formality": formality,
+                            "urgency": urgency
+                        }]});
+                })
+                .catch(error => {
+                    this.setState({error});
+                })
+        } else {
+            this.props.firebase
+                .user(userID)
+                .update( { growthData: [...this.state.growthDataInitial]})
+                .then(() => {
+                    this.setState({ ...INITIAL_STATE,
+                        growthDataInitial: [...this.state.growthDataInitial, {
+                            "taskName": taskName,
+                            "priority": priority,
+                            "formality": formality,
+                            "urgency": urgency
+                        }]});
+                })
+                .catch(error => {
+                    this.setState({error});
+                })
+        }
+
+        // this.setState({ ...INITIAL_STATE, data: [...this.state.data, {
+        //     "taskName": taskName,
+        //     "priority": priority,
+        //     "formality": formality,
+        //     "urgency": urgency
+        //     }]}
+        // );
 
 
         e.preventDefault();
@@ -128,28 +158,42 @@ class AddTask extends Component {
     handleDeleteTask = (e) => {
         const task = e.target.id;
         const name = e.target.name;
+        const userID = this.props.firebase.auth.currentUser.uid;
+        // const personalDataSnap =
+        //     this.props.firebase.user(userID).on("value",
+        //             snapshot => console.log(snapshot.val()))
 
-
+        //
         if (name === "personal") {
             DELETED_PERSONAL_TASKS_ARRAY = [...DELETED_PERSONAL_TASKS_ARRAY,
-                ...this.state.data.filter(el => el.taskName !== task)];
+                ...this.state.personalDataInitial.filter(el => el.taskName !== task)];
 
+            INITIAL_STATE = {...INITIAL_STATE,
+                personalDataInitial: [...DELETED_PERSONAL_TASKS_ARRAY]}
 
-            this.setState({...this.state, data:[
+            this.setState({...this.state, personalDataInitial:[
                     ...DELETED_PERSONAL_TASKS_ARRAY]});
                     // ...this.state.data.filter(el => el.taskName !== task)]})
+
         } else if (name === "work") {
             DELETED_WORK_TASKS_ARRAY = [...DELETED_WORK_TASKS_ARRAY,
-                ...this.state.data.filter(el => el.taskName !== task)];
+                ...this.state.workDataInitial.filter(el => el.taskName !== task)];
 
-            this.setState({...this.state, data:[
+            INITIAL_STATE = {...INITIAL_STATE,
+                personalDataInitial: [...DELETED_WORK_TASKS_ARRAY]}
+
+            this.setState({...this.state, workDataInitial:[
                     ...DELETED_WORK_TASKS_ARRAY]});
                     // ...this.state.data.filter(el => el.taskName !== task)]})
+
         } else {
             DELETED_GROWTH_TASKS_ARRAY = [...DELETED_GROWTH_TASKS_ARRAY,
-                ...this.state.data.filter(el => el.taskName !== task)];
+                ...this.state.growthDataInitial.filter(el => el.taskName !== task)];
 
-            this.setState({...this.state, data:[
+            INITIAL_STATE = {...INITIAL_STATE,
+                growthDataInitial: [...DELETED_GROWTH_TASKS_ARRAY]}
+
+            this.setState({...this.state, growthDataInitial:[
                     ...DELETED_GROWTH_TASKS_ARRAY]});
                     // ...this.state.data.filter(el => el.taskName !== task)]})
         }
@@ -165,53 +209,113 @@ class AddTask extends Component {
         const name = e.target.name;
 
         if (name === "personal") {
-            DONE_PERSONAL_TASKS_ARRAY = [...DONE_PERSONAL_TASKS_ARRAY, ...this.state.data.filter(el => el.taskName === task)];
-            this.setState({...this.state, data:[
-                    ...this.state.data.filter(el => el.taskName !== task)]})
+            DONE_PERSONAL_TASKS_ARRAY = [...DONE_PERSONAL_TASKS_ARRAY,
+                ...this.state.personalDataInitial.filter(el => el.taskName === task)];
+
+            INITIAL_STATE = {...INITIAL_STATE,
+                personalDataInitial: [...DONE_PERSONAL_TASKS_ARRAY]}
+
+            this.setState({...this.state, personalDataInitial:[
+                    ...this.state.personalDataInitial.filter(el => el.taskName !== task)]})
+
         } else if (name === "work") {
-            DONE_WORK_TASKS_ARRAY = [...DONE_WORK_TASKS_ARRAY, ...this.state.data.filter(el => el.taskName === task)];
-            this.setState({...this.state, data:[
-                    ...this.state.data.filter(el => el.taskName !== task)]})
+            DONE_WORK_TASKS_ARRAY = [...DONE_WORK_TASKS_ARRAY,
+                ...this.state.workDataInitial.filter(el => el.taskName === task)];
+
+            INITIAL_STATE = {...INITIAL_STATE,
+                workDataInitial: [...DONE_WORK_TASKS_ARRAY]}
+
+            this.setState({...this.state, workDataInitial:[
+                    ...this.state.workDataInitial.filter(el => el.taskName !== task)]})
+
         } else {
-            DONE_GROWTH_TASKS_ARRAY = [...DONE_GROWTH_TASKS_ARRAY, ...this.state.data.filter(el => el.taskName === task)];
-            this.setState({...this.state, data:[
-                    ...this.state.data.filter(el => el.taskName !== task)]})
+            DONE_GROWTH_TASKS_ARRAY = [...DONE_GROWTH_TASKS_ARRAY,
+                ...this.state.growthDataInitial.filter(el => el.taskName === task)];
+
+            INITIAL_STATE = {...INITIAL_STATE,
+                growthDataInitial: [...DONE_GROWTH_TASKS_ARRAY]}
+            this.setState({...this.state, growthDataInitial:[
+                    ...this.state.growthDataInitial.filter(el => el.taskName !== task)]})
         }
 
     }
 
+    componentDidMount() {
+        INITIAL_STATE = {
+            ...INITIAL_STATE,
+            personalDataInitial: [...this.state.personalDataInitial],
+            workDataInitial: [...this.state.workDataInitial],
+            growthDataInitial: [...this.state.growthDataInitial]
+        }
+        this.setState({...INITIAL_STATE})
+    }
+
+    // componentWillUnmount() {
+    //     INITIAL_STATE = {...INITIAL_STATE,
+    //         personalDataInitial: [...this.state.personalDataInitial],
+    //         workDataInitial: [...this.state.workDataInitial],
+    //         growthDataInitial: [...this.state.growthDataInitial]
+    //     }
+    //     this.setState({...INITIAL_STATE })
+    //
+    // }
+
 
     render() {
-        const { taskName, priority, formality, urgency } = this.state;
+        const {
+            taskName,
+            priority,
+            formality,
+            urgency,
+            personalDataInitial,
+            workDataInitial,
+            growthDataInitial
+        } = this.state;
+
         const isInvalid =
             taskName === "" ||
             priority === 0 ||
             formality === 0 ||
             urgency === 0
 
+        let tasksArray;
+
+        if (this.props.tab === "personal") {
+           tasksArray = [...personalDataInitial];
+
+        } else if (this.props.tab === "work") {
+
+            tasksArray = [...workDataInitial];
+        }
+
+        else {
+            tasksArray = [...growthDataInitial]
+        }
+
 
         return(
+
             <div>
-                <h2>Add your task </h2>
-                <ul> Your tasks list:
-                    {this.state.data
+                <ul> Your {`${this.props.tab}`} tasks list:
+                    {tasksArray
                         .sort((a,b) => (
-                            (+b.priority*1.25) + +b.formality + +b.urgency ) -
-                            ((+a.priority*1.25) + +a.formality + +a.urgency))
+                        (+b.priority*1.25) + +b.formality + +b.urgency ) -
+                        ((+a.priority*1.25) + +a.formality + +a.urgency))
                         .map((el, index) => (
                         <li key={index}>
-                            Task: {el.taskName}, Priority: {el.priority},
-                            Formality: {el.formality}, Urgency: {el.urgency},
-                            Priority rating:
-                            {(+el.priority*1.25) + +el.formality + +el.urgency}
-                            <DeleteTaskButton name={this.props.tab} id={el.taskName} onClick={this.handleDeleteTask} />
-                            <DoneTaskButton  name={this.props.tab} id={el.taskName} onClick={this.handleDoneTask}/>
+                        Task: {el.taskName}, Priority: {el.priority},
+                        Formality: {el.formality}, Urgency: {el.urgency},
+                        Priority rating:
+                        {(+el.priority*1.25) + +el.formality + +el.urgency}
+                        <DeleteTaskButton name={this.props.tab} id={el.taskName} onClick={this.handleDeleteTask} />
+                        <DoneTaskButton  name={this.props.tab} id={el.taskName} onClick={this.handleDoneTask}/>
                         </li>
-                    ))}
+                        ))
+                    }
                 </ul>
 
-
-                <form onSubmit={this.onSubmit}>
+                <h2>Add your {`${this.props.tab}`} task </h2>
+                <form onSubmit={this.onSubmit} name={this.props.tab}>
                     <input
                         name="taskName"
                         value={taskName}
@@ -285,9 +389,9 @@ class TasksSummary extends Component {
             personalTasksDone: [...DONE_PERSONAL_TASKS_ARRAY],
             workTasksDone: [...DONE_WORK_TASKS_ARRAY],
             growthTasksDone: [...DONE_GROWTH_TASKS_ARRAY],
-            personalTasksDeleted: [...DELETED_PERSONAL_TASKS_ARRAY],
-            workTasksDeleted: [...DELETED_WORK_TASKS_ARRAY],
-            growthTasksDeleted: [...DELETED_GROWTH_TASKS_ARRAY]
+            // personalTasksDeleted: [...DELETED_PERSONAL_TASKS_ARRAY],
+            // workTasksDeleted: [...DELETED_WORK_TASKS_ARRAY],
+            // growthTasksDeleted: [...DELETED_GROWTH_TASKS_ARRAY]
         };
     }
 
@@ -381,7 +485,7 @@ const DoneTaskButton = (props) => <button name={props.name} id={props.id}  type=
 
 const PrioritiesNavigation = () => (
     <div>
-        <p>Choose priorities tab:</p>
+        <p>Choose category:</p>
         <ul>
             <li>
                 <Link to={ROUTES.PRIORITIES_PERSONAL}>Personal</Link>
