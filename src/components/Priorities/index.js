@@ -21,36 +21,11 @@ let INITIAL_STATE = {
     priority: 0,
     formality: 0,
     urgency: 0,
-    data: [],
     personalDataInitial: [],
     workDataInitial: [],
     growthDataInitial: [],
     error: null
 }
-
-// let INITIAL_STATE_PERSONAL = {
-// taskName: "",
-//     priority: 0,
-//     formality: 0,
-//     urgency: 0,
-//     data: [],
-// // }
-//
-// const INITIAL_STATE_WORK = {
-//     taskName: "",
-//     priority: 0,
-//     formality: 0,
-//     urgency: 0,
-//     data: [],
-// }
-//
-// const INITIAL_STATE_GROWTH = {
-//     taskName: "",
-//     priority: 0,
-//     formality: 0,
-//     urgency: 0,
-//     data: [],
-// }
 
 let DONE_PERSONAL_TASKS_ARRAY = [];
 let DONE_WORK_TASKS_ARRAY = [];
@@ -93,54 +68,97 @@ class AddTask extends Component {
         const name = e.target.name;
 
         if (name === "personal") {
+
+            INITIAL_STATE = { ...INITIAL_STATE,
+                personalDataInitial: [...this.state.personalDataInitial, {
+                    "taskName": taskName,
+                    "priority": priority,
+                    "formality": formality,
+                    "urgency": urgency
+                }]
+            }
+
+            this.setState({ ...INITIAL_STATE,
+                personalDataInitial: [...this.state.personalDataInitial, {
+                    "taskName": taskName,
+                    "priority": priority,
+                    "formality": formality,
+                    "urgency": urgency
+                }]
+            });
+
             this.props.firebase
                 .user(userID)
-                .update( {personalData: [...this.state.personalDataInitial]})
-                .then(() => {
-                    this.setState({ ...INITIAL_STATE,
-                        personalDataInitial: [...this.state.personalDataInitial, {
-                            "taskName": taskName,
-                            "priority": priority,
-                            "formality": formality,
-                            "urgency": urgency
-                        }]});
-                })
-                .catch(error => {
-                    this.setState({error});
-                })
+                .update( {personalData: [...this.state.personalDataInitial, {
+                        "taskName": taskName,
+                        "priority": priority,
+                        "formality": formality,
+                        "urgency": urgency
+                    }]
+                });
+
 
         } else if (name === "work") {
+
+            INITIAL_STATE = { ...INITIAL_STATE,
+                workDataInitial: [ ...this.state.workDataInitial, {
+                    "taskName": taskName,
+                    "priority": priority,
+                    "formality": formality,
+                    "urgency": urgency
+            } ]
+            }
+
+            this.setState({ ...INITIAL_STATE,
+                workDataInitial: [...this.state.workDataInitial, {
+                    "taskName": taskName,
+                    "priority": priority,
+                    "formality": formality,
+                    "urgency": urgency
+                }]
+            });
+
             this.props.firebase
                 .user(userID)
-                .update( { workData: [...this.state.workDataInitial]})
-                .then(() => {
-                    this.setState({ ...INITIAL_STATE,
-                        workDataInitial: [...this.state.workDataInitial, {
-                            "taskName": taskName,
-                            "priority": priority,
-                            "formality": formality,
-                            "urgency": urgency
-                        }]});
-                })
-                .catch(error => {
-                    this.setState({error});
-                })
+                .update( { workData: [...this.state.workDataInitial, {
+                        "taskName": taskName,
+                        "priority": priority,
+                        "formality": formality,
+                        "urgency": urgency
+                    }]
+                });
+
+
         } else {
+
+            INITIAL_STATE = { ...INITIAL_STATE,
+                growthDataInitial: [ ...this.state.growthDataInitial, {
+                "taskName": taskName,
+                    "priority": priority,
+                    "formality": formality,
+                    "urgency": urgency
+                }]
+            };
+
+            this.setState({ ...INITIAL_STATE,
+                growthDataInitial: [...this.state.growthDataInitial, {
+                    "taskName": taskName,
+                    "priority": priority,
+                    "formality": formality,
+                    "urgency": urgency
+                }]
+            })
+
             this.props.firebase
                 .user(userID)
-                .update( { growthData: [...this.state.growthDataInitial]})
-                .then(() => {
-                    this.setState({ ...INITIAL_STATE,
-                        growthDataInitial: [...this.state.growthDataInitial, {
-                            "taskName": taskName,
-                            "priority": priority,
-                            "formality": formality,
-                            "urgency": urgency
-                        }]});
+                .update( { growthData: [...this.state.growthDataInitial, {
+                        "taskName": taskName,
+                        "priority": priority,
+                        "formality": formality,
+                        "urgency": urgency
+                    }]
                 })
-                .catch(error => {
-                    this.setState({error});
-                })
+
         }
 
         // this.setState({ ...INITIAL_STATE, data: [...this.state.data, {
@@ -168,20 +186,22 @@ class AddTask extends Component {
         //
 
         if (name === "personal") {
+            DELETED_PERSONAL_TASKS_ARRAY = [ ...DELETED_PERSONAL_TASKS_ARRAY,
+                ...this.state.personalDataInitial.filter(el => el.taskName !== task) ]
 
+            INITIAL_STATE = {...INITIAL_STATE,
+                personalDataInitial: [...this.state.personalDataInitial.filter(el => el.taskName !== task)]}
 
             this.setState( { ...this.state,
                 personalDataInitial:[
-                    ...this.state.personalDataInitial.filter(el => el.taskName !== task)] })
-
-            // DELETED_PERSONAL_TASKS_ARRAY = [...DELETED_PERSONAL_TASKS_ARRAY,
-            //     ...this.state.personalDataInitial.filter(el => console.log(el.taskName, task))]
-
+                    ...DELETED_PERSONAL_TASKS_ARRAY] })
 
             this.props.firebase
                 .user(userID)
                 .update({personalData: [ ...this.state.personalDataInitial.filter(el => el.taskName !== task)]})
-                // .then(() => this.setState({ ...this.state,
+
+
+            // .then(() => this.setState({ ...this.state,
                 //         personalDataInitial:[
                 //             ...this.state.personalDataInitial.filter(el => el.taskName !== task)] }))
                     // ...this.state.data.filter(el => el.taskName !== task)]})
@@ -189,27 +209,45 @@ class AddTask extends Component {
 
         } else if (name === "work") {
 
-            // DELETED_WORK_TASKS_ARRAY = [ ...DELETED_WORK_TASKS_ARRAY,
-            //     ...this.state.workDataInitial.filter(el => el.taskName !== task) ];
+            DELETED_WORK_TASKS_ARRAY = [ ...DELETED_WORK_TASKS_ARRAY,
+                ...this.state.workDataInitial.filter(el => el.taskName !== task) ]
 
+            INITIAL_STATE = {...INITIAL_STATE,
+                workDataInitial: [...this.state.workDataInitial.filter(el => el.taskName !== task)]}
+
+            this.setState( { ...this.state,
+                workDataInitial:[
+                    ...DELETED_WORK_TASKS_ARRAY] })
 
             this.props.firebase
                 .user(userID)
-                .update({workData: { ...this.state.workDataInitial.filter(el => el.taskName !== task) }})
-                .then(this.setState({ ...this.state, workDataInitial: [
-                        ...this.state.workDataInitial.filter(el => el.taskName !== task) ] }))
+                .update({workData: [ ...this.state.workDataInitial.filter(el => el.taskName !== task)]})
+
+
+            // .then(() => this.setState({ ...this.state,
+            //         personalDataInitial:[
+            //             ...this.state.personalDataInitial.filter(el => el.taskName !== task)] }))
                     // ...this.state.data.filter(el => el.taskName !== task)]})
 
         } else {
 
-            // DELETED_GROWTH_TASKS_ARRAY = [...DELETED_GROWTH_TASKS_ARRAY,
-            //     ...this.state.growthDataInitial.filter(el => el.taskName !== task)];
+            DELETED_GROWTH_TASKS_ARRAY = [ ...DELETED_GROWTH_TASKS_ARRAY,
+                ...this.state.growthDataInitial.filter(el => el.taskName !== task) ]
+
+            INITIAL_STATE = {...INITIAL_STATE,
+                growthDataInitial: [...this.state.growthDataInitial.filter(el => el.taskName !== task)]}
+
+            this.setState( { ...this.state,
+                growthDataInitial:[
+                    ...DELETED_GROWTH_TASKS_ARRAY] })
 
             this.props.firebase
                 .user(userID)
-                .update({growthData: [ ...this.state.growthDataInitial.filter(el => el.taskName !== task) ]})
-                .then(this.setState({ ...this.state, growthDataInitial:[
-                        ...this.state.growthDataInitial.filter(el => el.taskName !== task) ] }))
+                .update({growthData: [ ...this.state.growthDataInitial.filter(el => el.taskName !== task)]})
+
+            // .then(() => this.setState({ ...this.state,
+            //         personalDataInitial:[
+            //             ...this.state.personalDataInitial.filter(el => el.taskName !== task)] }))
             // ...this.state.data.filter(el => el.taskName !== task)]}))
 
         }
@@ -228,7 +266,7 @@ class AddTask extends Component {
                 ...this.state.personalDataInitial.filter(el => el.taskName === task)];
 
             INITIAL_STATE = {...INITIAL_STATE,
-                personalDataInitial: [...DONE_PERSONAL_TASKS_ARRAY]}
+                personalDataInitial: [...DELETED_PERSONAL_TASKS_ARRAY]}
 
 
             this.setState({...this.state, personalDataInitial:[
