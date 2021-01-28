@@ -51,11 +51,15 @@ class AddTask extends Component {
 
     }
 
+    //works
+
     onChange = e => {
         const { name, value } = e.target;
         this.setState({ [name]:value });
 
     };
+
+    //works
 
     onSubmit = (e) => {
         const { taskName, priority, formality, urgency} = this.state;
@@ -173,9 +177,10 @@ class AddTask extends Component {
         e.preventDefault();
     };
 
+    //works
+
     handleDeleteTask = (e) => {
 
-        // const task = e.target.id;
         const name = e.target.name;
         const task = e.target.id
         const userID = this.props.firebase.auth.currentUser.uid;
@@ -257,39 +262,63 @@ class AddTask extends Component {
 
     }
 
+    //not working
+
     handleDoneTask = (e) => {
         const task = e.target.id;
         const name = e.target.name;
+        const userID = this.props.firebase.auth.currentUser.uid;
 
         if (name === "personal") {
             DONE_PERSONAL_TASKS_ARRAY = [...DONE_PERSONAL_TASKS_ARRAY,
                 ...this.state.personalDataInitial.filter(el => el.taskName === task)];
 
             INITIAL_STATE = {...INITIAL_STATE,
-                personalDataInitial: [...DELETED_PERSONAL_TASKS_ARRAY]}
+                personalDataInitial: [...this.state.personalDataInitial.filter(el => el.taskName !== task)]};
 
+            this.setState({...this.state,
+                personalDataInitial:[
+                    ...this.state.personalDataInitial.filter(el => el.taskName !== task)]
+            })
 
-            this.setState({...this.state, personalDataInitial:[
-                    ...this.state.personalDataInitial.filter(el => el.taskName !== task)]})
+            this.props.firebase
+                .user(userID)
+                .update({personalData: [...this.state.personalDataInitial.filter(el => el.taskName !== task)]
+                })
+
 
         } else if (name === "work") {
             DONE_WORK_TASKS_ARRAY = [...DONE_WORK_TASKS_ARRAY,
                 ...this.state.workDataInitial.filter(el => el.taskName === task)];
 
             INITIAL_STATE = {...INITIAL_STATE,
-                workDataInitial: [...DONE_WORK_TASKS_ARRAY]}
+                workDataInitial: [...this.state.workDataInitial.filter(el => el.taskName !== task )]};
 
-            this.setState({...this.state, workDataInitial:[
-                    ...this.state.workDataInitial.filter(el => el.taskName !== task)]})
+            this.setState({...this.state,
+                workDataInitial:[
+                    ...this.state.workDataInitial.filter(el => el.taskName !== task)]
+            });
+
+            this.props.firebase
+                .user(userID)
+                .update({workData: [...this.state.workDataInitial.filter(el => el.taskName !== task)]
+                });
 
         } else {
             DONE_GROWTH_TASKS_ARRAY = [...DONE_GROWTH_TASKS_ARRAY,
                 ...this.state.growthDataInitial.filter(el => el.taskName === task)];
 
             INITIAL_STATE = {...INITIAL_STATE,
-                growthDataInitial: [...DONE_GROWTH_TASKS_ARRAY]}
+                growthDataInitial: [...this.state.growthDataInitial.filter(el => el.taskName !== task)]};
+
             this.setState({...this.state, growthDataInitial:[
-                    ...this.state.growthDataInitial.filter(el => el.taskName !== task)]})
+                    ...this.state.growthDataInitial.filter(el => el.taskName !== task)]
+            })
+
+            this.props.firebase
+                .user(userID)
+                .update({growthData: {...this.state.growthDataInitial.filter(el => el.taskName !== task)}
+                });
         }
 
     }
@@ -310,7 +339,7 @@ class AddTask extends Component {
             taskName === "" ||
             priority === 0 ||
             formality === 0 ||
-            urgency === 0
+            urgency === 0;
 
         let tasksArray;
 
