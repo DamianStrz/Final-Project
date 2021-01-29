@@ -365,10 +365,16 @@ class AddTask extends Component {
             }
     }
 
-    componentWillUnmount() {
-        const userID = this.props.firebase.auth.currentUser.uid;
-        this.props.firebase.user(userID).off();
-    }
+
+    /*I don't really know if it's necessary to do sth like turning of listeners. Tried solution like down below
+    but it doesn't work -> signing out resulted with error. */
+
+    // componentWillUnmount() {
+    //     const userID = this.props.firebase.auth.currentUser.uid;
+    //     this.props.firebase.user(userID).off();
+    //
+    // }
+
 
     render() {
         const {
@@ -536,10 +542,14 @@ class TasksSummary extends Component {
             })
     }
 
-    componentWillUnmount() {
-        const userID = this.props.firebase.auth.currentUser.uid;
-        this.props.firebase.user(userID).off();
-    }
+    /*I don't really know if it's necessary to do sth like turning of listeners. Tried solution like down below
+    but it doesn't work -> signing out resulted with error. */
+
+    // componentWillUnmount() {
+    //     const userID = this.props.firebase.auth.currentUser.uid;
+    //     this.props.firebase.user(userID).off();
+    //
+    // }
 
     render() {
         return (
