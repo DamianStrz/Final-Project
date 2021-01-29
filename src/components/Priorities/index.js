@@ -184,11 +184,7 @@ class AddTask extends Component {
         const name = e.target.name;
         const task = e.target.id
         const userID = this.props.firebase.auth.currentUser.uid;
-        // const personalDataSnap =
-        //     this.props.firebase.user(userID).on("value",
-        //             snapshot => console.log(snapshot.val()))
 
-        //
 
         if (name === "personal") {
             DELETED_PERSONAL_TASKS_ARRAY = [ ...DELETED_PERSONAL_TASKS_ARRAY,
@@ -323,6 +319,49 @@ class AddTask extends Component {
 
     }
 
+    componentDidMount() {
+        const userID = this.props.firebase.auth.currentUser.uid;
+        const name = this.props.tab;
+
+        if (name === "personal") {
+            this.listener = this.props.firebase
+                .user(userID)
+                .once("value", snapshot => {
+                    const PERSONAL_DATA_FROM_DATABASE = snapshot.val().personalData;
+
+                    PERSONAL_DATA_FROM_DATABASE !== undefined
+                        ? this.setState({...INITIAL_STATE, personalDataInitial: [...PERSONAL_DATA_FROM_DATABASE]})
+                        : this.setState({...INITIAL_STATE, personalDataInitial: []});
+                });
+
+        } else if (name === "work") {
+            this.listener = this.props.firebase
+                .user(userID)
+                .once("value", snapshot => {
+                    const WORK_DATA_FROM_DATABASE = snapshot.val().workData;
+
+                    WORK_DATA_FROM_DATABASE !== undefined
+                        ? this.setState({...INITIAL_STATE, workDataInitial:[...WORK_DATA_FROM_DATABASE]})
+                        : this.setState({...INITIAL_STATE, workDataInitial: []})
+
+                });
+
+        } else {
+            this.listener = this.props.firebase
+                .user(userID)
+                .once("value", snapshot => {
+                    const GROWTH_DATA_FROM_DATABASE = snapshot.val().growthData;
+
+                    GROWTH_DATA_FROM_DATABASE !== undefined
+                        ? this.setState({...INITIAL_STATE, growthDataInitial:[...GROWTH_DATA_FROM_DATABASE]})
+                        : this.setState({...INITIAL_STATE, growthDataInitial: []});
+
+                });
+            }
+    }
+
+    componentWillUnmount() {
+    }
 
     render() {
         const {
