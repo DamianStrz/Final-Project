@@ -27,12 +27,16 @@ import {Container} from "react-bootstrap";
 
 const App = () => (
     <Router>
-        <Container as="header">
+        <Container fluid as="header">
             <Navigation />
         </Container>
 
         <hr/>
-        <Container as="main" className="h-100">
+        <Container fluid as="main" className="
+        d-flex
+        justify-content-center
+        align-items-center
+        border border-white rounded">
             <Switch>
                 <Route exact path={ROUTES.LANDING} component={LandingPage}/>
                 <Route path={ROUTES.SIGN_IN} component={SignInPage}/>
@@ -55,8 +59,10 @@ const App = () => (
 
         <hr/>
 
-        <Container as="footer" className="d-flex justify-content-end">
-            by Damian Strzałkowski
+        <Container fluid as="footer">
+            <p className="text-center">This application is made for educational purposes. It is not recommended to pass any sensitive information
+                to inputs or any other important for users information.<span><br/> &copy; Made by Damian Strzałkowski</span></p>
+
         </Container>
 
     </Router>

@@ -25,7 +25,7 @@ const Navigation = () => (
 )
 
 const NavigationAuth = () => (
-    <Nav className="justify-content-center" activeKey={ROUTES.LANDING}>
+    <Nav className="pt-2 justify-content-center" activeKey={ROUTES.LANDING}>
         <Nav.Item>
             <Nav.Link as={NavLink} to={ROUTES.LANDING}>Landing page</Nav.Link>
         </Nav.Item>

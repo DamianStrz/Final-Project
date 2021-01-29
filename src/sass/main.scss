@@ -2,28 +2,114 @@
 @import "../sass/layout";
 @import "../sass/components";
 
+$main-font: "PT Serif", Serif;
+$main-color: #006666;
+$secondary-color: #9EC1A3;
+$highlight-color: #ffba1a;
+$shaded-color: #808080;
+$bright: #FFFFFF;
+$dark: #000000;
+$error: darkred;
+
+
+root, html {
+  height: 100%;
+}
 
 body {
+  background-color: $white;
+  height: 100%;
+  font-family: $main-font;
+}
+
+#root {
+  height: 100%;
+  padding: 0 20px;
+}
+
+.error {
+  color: $error;
+}
+
+a {
+  color: $highlight-color;
+
+  &:hover {
+    color: darken($highlight-color, 10%);
+  }
+}
+
+.btn-primary, .btn-sm {
+  background-color: $highlight-color;
+  border: none;
+  color: $main-color;
+
+
+  &:hover {
+    background-color: darken($highlight-color, 10%);
+    color: $main-color;
+}
+  &:disabled {
+    background-color: $shaded-color;
+    color: $bright
+  }
+}
+
+input {
+  border: 2px solid $main-color;
+  border-radius: 0.2rem;
+  color: $main-color;
+
+
+  &:focus {
+    outline-color: $highlight-color;
+
+  }
+
+  &::placeholder {
+    color: $secondary-color;
+  }
+}
+
+header {
+  background-color: $bright;
+  min-height: 4%;
+  height: auto;
+}
+
+main {
   background-image: linear-gradient(to right top, #006666, #2c8582, #4ca59e, #6bc7bb, #8ae9d8);;
   background-repeat: no-repeat;
-  display: block;
+  color: $bright;
+  min-height: 78%;
+  height: auto;
+}
+
+main h2 {
+  font-style: italic;
 }
 
 footer {
   font-family: "Garuda", Garuda, serif ;
   font-size: 0.5rem;
-  color: #FFFFFF;
+  color: $main-color;
+  background-color: $bright;
+  min-height: 4%;
+  height: auto;
+
+  p {
+    margin: 0;
+  }
 }
 
-main {
-  color: #FFFFFF;
-
-}
 
 .nav-link {
-  color: #FFFFFF;
+  color: $main-color;
+
+  &:hover {
+    color: lighten($main-color, 15%);
+
+  }
 }
 
-.nav-link:hover{
-  color: lighten(#006666, 50%);
-}
+

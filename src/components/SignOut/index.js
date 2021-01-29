@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Button } from "react-bootstrap";
+
 import { withFirebase } from "../Firebase";
 
 /* SignOut component is a button which onClick event uses doSignOut method from
@@ -10,9 +12,9 @@ Sign Out action is defined in firebase API.
 * */
 
 const SignOutButton = ({ firebase }) => (
-    <button type="button" onClick={firebase.doSignOut}>
+    <Button type="button" onClick={firebase.doSignOut}>
         Sign me out
-    </button>
+    </Button>
 )
 
 export default withFirebase(SignOutButton);

@@ -1,8 +1,10 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { withAuthorization } from "../Session"
 import * as ROUTES from "../../constants/routes"
+
+import { Nav, Button } from "react-bootstrap";
 
 const PrioritiesPage = () => (
     <div>
@@ -466,7 +468,7 @@ class AddTask extends Component {
                         max="3"
                         placeholder="Set urgency from 1 - 3"
                     />
-                    <button name={this.props.tab} disabled={isInvalid} type="submit">Add task</button>
+                    <Button name={this.props.tab} disabled={isInvalid} type="submit">Add task</Button>
                 </form>
             </div>
         )
@@ -635,36 +637,56 @@ class TasksSummary extends Component {
     }
 }
 
-const DeleteTaskButton = (props) => <button
+const DeleteTaskButton = (props) => <Button
+    variant="danger"
+    className="ml-1"
     name={props.name}
     id={props.id}
     type="button"
-    onClick={props.onClick}>Delete</button>
+    onClick={props.onClick}>Delete</Button>
 
-const DoneTaskButton = (props) => <button
+const DoneTaskButton = (props) => <Button
+    variant="success"
+    className="ml-1"
     name={props.name}
     id={props.id}
     type="button"
-    onClick={props.onClick}>Done</button>
+    onClick={props.onClick}>Done</Button>
 
 const PrioritiesNavigation = () => (
-    <div>
-        <p>Choose category:</p>
-        <ul>
-            <li>
-                <Link to={ROUTES.PRIORITIES_PERSONAL}>Personal</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.PRIORITIES_WORK}>Work</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.PRIORITIES_GROWTH}>Growth</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.PRIORITIES_SUMMARY}>Summary</Link>
-            </li>
-        </ul>
-    </div>
+    // <div>
+    //     <p>Choose category:</p>
+    //     <ul>
+    //         <li>
+    //             <Link to={ROUTES.PRIORITIES_PERSONAL}>Personal</Link>
+    //         </li>
+    //         <li>
+    //             <Link to={ROUTES.PRIORITIES_WORK}>Work</Link>
+    //         </li>
+    //         <li>
+    //             <Link to={ROUTES.PRIORITIES_GROWTH}>Growth</Link>
+    //         </li>
+    //         <li>
+    //             <Link to={ROUTES.PRIORITIES_SUMMARY}>Summary</Link>
+    //         </li>
+    //     </ul>
+    // </div>
+
+    <Nav variant="tabs">
+        <Nav.Item>
+            <Nav.Link as={NavLink} to={ROUTES.PRIORITIES_PERSONAL}>Personal</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+            <Nav.Link as={NavLink} to={ROUTES.PRIORITIES_WORK}>Work</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+            <Nav.Link as={NavLink} to={ROUTES.PRIORITIES_GROWTH}>Growth</Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+            <Nav.Link as={NavLink} to={ROUTES.PRIORITIES_SUMMARY}>Summary</Nav.Link>
+        </Nav.Item>
+
+    </Nav>
 )
 
 
