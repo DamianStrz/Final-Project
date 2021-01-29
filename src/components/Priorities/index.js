@@ -279,9 +279,10 @@ class AddTask extends Component {
 
             this.props.firebase
                 .user(userID)
-                .update({personalData: [...this.state.personalDataInitial.filter(el => el.taskName !== task)]
+                .update({
+                    personalData: [...this.state.personalDataInitial.filter(el => el.taskName !== task)],
+                    personalDataDone: [...this.state.personalDataInitial.filter(el => el.taskName === task)]
                 })
-
 
         } else if (name === "work") {
             DONE_WORK_TASKS_ARRAY = [...DONE_WORK_TASKS_ARRAY,
@@ -297,7 +298,9 @@ class AddTask extends Component {
 
             this.props.firebase
                 .user(userID)
-                .update({workData: [...this.state.workDataInitial.filter(el => el.taskName !== task)]
+                .update({
+                    workData: [...this.state.workDataInitial.filter(el => el.taskName !== task)],
+                    workDataDone: [...this.state.workDataInitial.filter(el => el.taskName === task)]
                 });
 
         } else {
@@ -313,7 +316,9 @@ class AddTask extends Component {
 
             this.props.firebase
                 .user(userID)
-                .update({growthData: {...this.state.growthDataInitial.filter(el => el.taskName !== task)}
+                .update({
+                    growthData: [...this.state.growthDataInitial.filter(el => el.taskName !== task)],
+                    growthDataDone: [...this.state.growthDataInitial.filter(el => el.taskName === task)]
                 });
         }
 
@@ -361,6 +366,8 @@ class AddTask extends Component {
     }
 
     componentWillUnmount() {
+        const userID = this.props.firebase.auth.currentUser.uid;
+        this.props.firebase.user(userID).off();
     }
 
     render() {
@@ -488,13 +495,50 @@ class TasksSummary extends Component {
         this.firebase = this.props.firebase;
 
         this.state = {
-            personalTasksDone: [...DONE_PERSONAL_TASKS_ARRAY],
-            workTasksDone: [...DONE_WORK_TASKS_ARRAY],
-            growthTasksDone: [...DONE_GROWTH_TASKS_ARRAY],
-            // personalTasksDeleted: [...DELETED_PERSONAL_TASKS_ARRAY],
-            // workTasksDeleted: [...DELETED_WORK_TASKS_ARRAY],
-            // growthTasksDeleted: [...DELETED_GROWTH_TASKS_ARRAY]
+            personalTasksDone: [],
+            workTasksDone: [],
+            growthTasksDone: [],
         };
+
+    }
+
+    componentDidMount() {
+        const userID = this.props.firebase.auth.currentUser.uid;
+
+        this.props.firebase
+            .user(userID)
+            .once("value", snapshot => {
+                const DONE_PERSONAL_DATA_FROM_DATABASE = snapshot.val().personalDataDone;
+
+                DONE_PERSONAL_DATA_FROM_DATABASE !== undefined
+                    ? this.setState({personalTasksDone: [...DONE_PERSONAL_DATA_FROM_DATABASE]})
+                    : this.setState({personalTasksDone: []});
+            })
+
+        this.props.firebase
+            .user(userID)
+            .once("value", snapshot => {
+                const DONE_WORK_DATA_FROM_DATABASE = snapshot.val().workDataDone;
+
+                DONE_WORK_DATA_FROM_DATABASE !== undefined
+                    ? this.setState({workTasksDone: [...DONE_WORK_DATA_FROM_DATABASE]})
+                    : this.setState({workTasksDone: []});
+            })
+
+        this.props.firebase
+            .user(userID)
+            .once("value", snapshot => {
+                const DONE_GROWTH_DATA_FROM_DATABASE = snapshot.val().growthDataDone;
+
+                DONE_GROWTH_DATA_FROM_DATABASE !== undefined
+                    ? this.setState({growthTasksDone: [...DONE_GROWTH_DATA_FROM_DATABASE]})
+                    : this.setState({growthTasksDone: []})
+            })
+    }
+
+    componentWillUnmount() {
+        const userID = this.props.firebase.auth.currentUser.uid;
+        this.props.firebase.user(userID).off();
     }
 
     render() {
@@ -581,9 +625,17 @@ class TasksSummary extends Component {
     }
 }
 
-const DeleteTaskButton = (props) => <button name={props.name} id={props.id} type="button" onClick={props.onClick}>Delete</button>
+const DeleteTaskButton = (props) => <button
+    name={props.name}
+    id={props.id}
+    type="button"
+    onClick={props.onClick}>Delete</button>
 
-const DoneTaskButton = (props) => <button name={props.name} id={props.id}  type="button" onClick={props.onClick}>Done</button>
+const DoneTaskButton = (props) => <button
+    name={props.name}
+    id={props.id}
+    type="button"
+    onClick={props.onClick}>Done</button>
 
 const PrioritiesNavigation = () => (
     <div>
@@ -614,7 +666,7 @@ const AddTaskPersonalFirebase = withAuthorization(condition)(AddTaskPersonal);
 const AddTaskWorkFirebase = withAuthorization(condition)(AddTaskWork);
 const AddTaskGrowthFirebase = withAuthorization(condition)(AddTaskGrowth);
 const TasksSummaryFirebase = withAuthorization(condition)(TasksSummary);
-;
+
 
 export {
     DeleteTaskButton,
