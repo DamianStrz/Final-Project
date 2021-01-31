@@ -34,6 +34,7 @@ const App = () => (
         <hr/>
         <Container fluid as="main" className="
         d-flex
+        flex-column
         justify-content-center
         align-items-center
         border border-white rounded">

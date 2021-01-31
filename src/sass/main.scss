@@ -55,22 +55,6 @@ a {
   }
 }
 
-input {
-  border: 2px solid $main-color;
-  border-radius: 0.2rem;
-  color: $main-color;
-
-
-  &:focus {
-    outline-color: $highlight-color;
-
-  }
-
-  &::placeholder {
-    color: $secondary-color;
-  }
-}
-
 header {
   background-color: $bright;
   min-height: 4%;
@@ -87,6 +71,44 @@ main {
 
 main h2 {
   font-style: italic;
+}
+
+//Priorities nav
+
+div.nav-tabs {
+  border-color: $highlight-color;
+}
+
+div.nav-tabs > .nav-item > .nav-link {
+  color: $bright;
+
+  &:hover {
+    border-color: $highlight-color;
+    color: $highlight-color;
+
+  }
+}
+div.nav-tabs > .nav-item > .nav-link.active {
+  color: $main-color;
+}
+
+
+// Form
+
+input {
+  border: 2px solid $main-color;
+  border-radius: 0.2rem;
+  color: $main-color;
+
+
+  &:focus {
+    outline-color: $highlight-color;
+
+  }
+
+  &::placeholder {
+    color: $secondary-color;
+  }
 }
 
 footer {

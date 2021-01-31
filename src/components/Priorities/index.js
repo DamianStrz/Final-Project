@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 import { withAuthorization } from "../Session"
 import * as ROUTES from "../../constants/routes"
@@ -7,14 +8,14 @@ import * as ROUTES from "../../constants/routes"
 import { Nav, Button } from "react-bootstrap";
 
 const PrioritiesPage = () => (
-    <div>
-        <h1>See your priorities</h1>
-        <p>Access only for signed in user</p>
+    <Container fluid className="d-flex flex-column align-items-center">
+        <h1 className="text-center">See your priorities</h1>
+        <p className="text-center mb-4">Access only for signed in user</p>
         <PrioritiesNavigation/>
 
         <hr/>
 
-    </div>
+    </Container>
 )
 
 
@@ -412,14 +413,16 @@ class AddTask extends Component {
 
         return(
 
-            <div>
-                <ul> Your {`${this.props.tab}`} tasks list:
+            <Container fluid className="d-flex flex-column w-75 p2">
+
+                <ul>
+                    <h5>Your {`${this.props.tab}`} tasks list:</h5>
                     {tasksArray
                         .sort((a,b) => (
                         (+b.priority*1.25) + +b.formality + +b.urgency ) -
                         ((+a.priority*1.25) + +a.formality + +a.urgency))
                         .map((el, index) => (
-                        <li key={index}>
+                        <li className="m-1" key={index}>
                         Task: {el.taskName}, Priority: {el.priority},
                         Formality: {el.formality}, Urgency: {el.urgency},
                         Priority rating:
@@ -431,16 +434,16 @@ class AddTask extends Component {
                     }
                 </ul>
 
-                <h2>Add your {`${this.props.tab}`} task </h2>
-                <form onSubmit={this.onSubmit} name={this.props.tab}>
-                    <input
+                <h3 className="text-center">Add your {`${this.props.tab}`} task </h3>
+                <form className="d-flex justify-content-center align-items-center" onSubmit={this.onSubmit} name={this.props.tab}>
+                    <input className="mr-1"
                         name="taskName"
                         value={taskName}
                         onChange={this.onChange}
                         type="text"
                         placeholder="Enter task name"
                     />
-                    <input
+                    <input className="ml-1 mr-1"
                         name="priority"
                         value={priority}
                         onChange={this.onChange}
@@ -449,7 +452,7 @@ class AddTask extends Component {
                         max="3"
                         placeholder="Set priority from 1 - 3"
                     />
-                    <input
+                    <input className="ml-1 mr-1"
                         name="formality"
                         value={formality}
                         onChange={this.onChange}
@@ -459,7 +462,7 @@ class AddTask extends Component {
                         placeholder="Set formality from 1 - 3"
                     />
 
-                    <input
+                    <input className="ml-1 mr-1"
                         name="urgency"
                         value={urgency}
                         onChange={this.onChange}
@@ -468,9 +471,9 @@ class AddTask extends Component {
                         max="3"
                         placeholder="Set urgency from 1 - 3"
                     />
-                    <Button name={this.props.tab} disabled={isInvalid} type="submit">Add task</Button>
+                    <Button className="ml-1" name={this.props.tab} disabled={isInvalid} type="submit">Add task</Button>
                 </form>
-            </div>
+            </Container>
         )
     }
 }
@@ -672,7 +675,7 @@ const PrioritiesNavigation = () => (
     //     </ul>
     // </div>
 
-    <Nav variant="tabs">
+    <Nav variant="tabs" className="d-flex justify-content-center w-50">
         <Nav.Item>
             <Nav.Link as={NavLink} to={ROUTES.PRIORITIES_PERSONAL}>Personal</Nav.Link>
         </Nav.Item>
