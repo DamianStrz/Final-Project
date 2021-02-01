@@ -8,7 +8,7 @@ import * as ROUTES from "../../constants/routes"
 import { Nav, Button } from "react-bootstrap";
 
 const PrioritiesPage = () => (
-    <Container fluid className="d-flex flex-column align-items-center">
+    <Container fluid className="d-flex flex-column align-items-center w-75">
         <h1 className="text-center">See your priorities</h1>
         <p className="text-center mb-4">Access only for signed in user</p>
         <PrioritiesNavigation/>
@@ -410,33 +410,71 @@ class AddTask extends Component {
             tasksArray = [...growthDataInitial]
         }
 
-
         return(
 
-            <Container fluid className="d-flex flex-column w-75 p2">
+            <Container fluid className="d-flex flex-column w-75 p2 mb-4 align-items-center">
 
-                <ul>
+                <ul className="w-75 p-0">
                     <h5>Your {`${this.props.tab}`} tasks list:</h5>
                     {tasksArray
-                        .sort((a,b) => (
-                        (+b.priority*1.25) + +b.formality + +b.urgency ) -
-                        ((+a.priority*1.25) + +a.formality + +a.urgency))
-                        .map((el, index) => (
-                        <li className="m-1" key={index}>
-                        Task: {el.taskName}, Priority: {el.priority},
-                        Formality: {el.formality}, Urgency: {el.urgency},
-                        Priority rating:
-                        {(+el.priority*1.25) + +el.formality + +el.urgency}
-                        <DeleteTaskButton name={this.props.tab} id={el.taskName} onClick={this.handleDeleteTask} />
-                        <DoneTaskButton  name={this.props.tab} id={el.taskName} onClick={this.handleDoneTask}/>
-                        </li>
-                        ))
+                        .sort((a, b) => (
+                            (+b.priority * 1.25) + +b.formality + +b.urgency) -
+                            ((+a.priority * 1.25) + +a.formality + +a.urgency))
+                        .map((el, index) => {
+                            if ( index <= 2) {
+                                return <li className="high-priority-task m-1 p-1 d-flex justify-content-between align-items-center rounded"
+                                    key={index}>
+                                    Task: {el.taskName}
+                                    {/*, Priority: {el.priority},*/}
+                                    {/*Formality: {el.formality}, Urgency: {el.urgency},*/}
+                                    Priority rating:
+                                    {(+el.priority * 1.25) + +el.formality + +el.urgency}
+                                    <div>
+                                        <DeleteTaskButton name={this.props.tab} id={el.taskName}
+                                                          onClick={this.handleDeleteTask}/>
+                                        <DoneTaskButton name={this.props.tab} id={el.taskName}
+                                                        onClick={this.handleDoneTask}/>
+                                    </div>
+                                </li>
+                            } else if (index > 2 && tasksArray.indexOf(el) <= 4) {
+                                return <li className="medium-priority-task m-1 p-1 d-flex justify-content-between align-items-center rounded"
+                                           key={index}>
+                                    Task: {el.taskName}
+                                    {/*, Priority: {el.priority},*/}
+                                    {/*Formality: {el.formality}, Urgency: {el.urgency},*/}
+                                    Priority rating:
+                                    {(+el.priority * 1.25) + +el.formality + +el.urgency}
+                                    <div>
+                                        <DeleteTaskButton name={this.props.tab} id={el.taskName}
+                                                          onClick={this.handleDeleteTask}/>
+                                        <DoneTaskButton name={this.props.tab} id={el.taskName}
+                                                        onClick={this.handleDoneTask}/>
+                                    </div>
+                                </li>
+                            } else {
+                                return <li className="low-priority-task m-1 p-1 d-flex justify-content-between align-items-center rounded"
+                                           key={index}>
+                                    Task: {el.taskName}
+                                    {/*, Priority: {el.priority},*/}
+                                    {/*Formality: {el.formality}, Urgency: {el.urgency},*/}
+                                    Priority rating:
+                                    {(+el.priority * 1.25) + +el.formality + +el.urgency}
+                                    <div>
+                                        <DeleteTaskButton name={this.props.tab} id={el.taskName}
+                                                          onClick={this.handleDeleteTask}/>
+                                        <DoneTaskButton name={this.props.tab} id={el.taskName}
+                                                        onClick={this.handleDoneTask}/>
+                                    </div>
+                                </li>
+                            }
+                        })
                     }
+
                 </ul>
 
-                <h3 className="text-center">Add your {`${this.props.tab}`} task </h3>
-                <form className="d-flex justify-content-center align-items-center" onSubmit={this.onSubmit} name={this.props.tab}>
-                    <input className="mr-1"
+                <h3 className="text-center w-75">Add your {`${this.props.tab}`} task </h3>
+                <form className="d-flex justify-content-between align-items-center w-75" onSubmit={this.onSubmit} name={this.props.tab}>
+                    <input className="mr-1 task-input"
                         name="taskName"
                         value={taskName}
                         onChange={this.onChange}

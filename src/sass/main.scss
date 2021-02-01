@@ -90,6 +90,7 @@ div.nav-tabs > .nav-item > .nav-link {
 }
 div.nav-tabs > .nav-item > .nav-link.active {
   color: $main-color;
+  border-bottom-color: $highlight-color;
 }
 
 
@@ -110,6 +111,47 @@ input {
     color: $secondary-color;
   }
 }
+
+//Add task component
+.task-input {
+  width: 300px;
+  max-width: 50%;
+}
+
+li {
+  list-style: none;
+}
+
+.high-priority-task {
+  border-color: $highlight-color;
+  background-color: $bright;
+  color: $main-color;
+  font-size: 0.8rem;
+}
+
+.medium-priority-task {
+  border-color: $highlight-color;
+  background-color: $bright;
+  color: $main-color;
+  opacity: 0.78;
+  font-size: 0.8rem;
+}
+
+.low-priority-task {
+  border-color: $highlight-color;
+  background-color: $bright;
+  color: $main-color;
+  opacity: 0.6;
+  font-size: 0.8rem;
+}
+
+.btn-danger, .btn-success {
+  font-size: 0.8rem;
+}
+
+
+
+
 
 footer {
   font-family: "Garuda", Garuda, serif ;
