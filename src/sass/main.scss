@@ -123,14 +123,14 @@ li {
 }
 
 .high-priority-task {
-  border-color: $highlight-color;
+  border: 2px solid $highlight-color;
   background-color: $bright;
   color: $main-color;
   font-size: 0.8rem;
 }
 
 .medium-priority-task {
-  border-color: $highlight-color;
+  border: 2px solid $highlight-color;
   background-color: $bright;
   color: $main-color;
   opacity: 0.78;
@@ -138,7 +138,7 @@ li {
 }
 
 .low-priority-task {
-  border-color: $highlight-color;
+  border: 2px solid $highlight-color;
   background-color: $bright;
   color: $main-color;
   opacity: 0.6;
@@ -149,8 +149,22 @@ li {
   font-size: 0.8rem;
 }
 
+//Summary page
 
+.summary {
+  background-color: $bright;
+  color: $main-color;
+  border: 2px solid $highlight-color;
+}
 
+.summary-list {
+  border: 2px dotted $secondary-color;
+}
+
+.high-priority-title {
+  color: $highlight-color;
+  font-weight: bold;
+}
 
 
 footer {

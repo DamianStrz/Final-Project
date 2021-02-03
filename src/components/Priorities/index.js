@@ -412,7 +412,7 @@ class AddTask extends Component {
 
         return(
 
-            <Container fluid className="d-flex flex-column w-75 p2 mb-4 align-items-center">
+            <Container fluid className="d-flex flex-column w-100 p2 mb-4 align-items-center">
 
                 <ul className="w-75 p-0">
                     <h5>Your {`${this.props.tab}`} tasks list:</h5>
@@ -596,82 +596,77 @@ class TasksSummary extends Component {
 
     render() {
         return (
-            <div>
-                <div>
-                    <h1>Personal Summary</h1>
-                    <h2>Tasks done: </h2><p>{this.state.personalTasksDone.length}</p>
-                    <h2>High priority tasks done (priority rating >= 5): </h2><p>
+            <Container fluid className="w-100 d-flex flex-column align-items-center">
+                <Container fluid className="w-75 summary rounded p-4 mb-3">
+                    <h2>Personal Summary</h2>
+                    <p>Tasks done:&nbsp; <span>{this.state.personalTasksDone.length}</span></p>
+                    <p>High priority tasks done (priority rating >= 5):&nbsp; <span className=" high-priority-title">
                     {this.state.personalTasksDone.filter(el =>
                         ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
-                        .length}</p>
+                        .length}</span></p>
 
-                    <ul>
+                    <ul className="d-flex flex-column align-items-center p-0">
                         Done tasks:
                         {this.state.personalTasksDone
                             .sort((a,b) => (
                                 (+b.priority*1.25) + +b.formality + +b.urgency ) -
                                 ((+a.priority*1.25) + +a.formality + +a.urgency))
                             .map((el, index) => (
-                                <li key={index}>
-                                    Task: {el.taskName}, Priority: {el.priority},
-                                    Formality: {el.formality}, Urgency: {el.urgency},
-                                    Priority rating:
+                                <li className="summary-list p-1 mt-1" key={index}>
+                                    Task: {el.taskName} || Priority rating:&nbsp;
                                     {(+el.priority*1.25) + +el.formality + +el.urgency}
                                 </li>
                             ))}
                     </ul>
-                </div>
+                </Container>
 
-                <div>
-                    <h1>Work Summary</h1>
-                    <h2>Tasks done: </h2><p>{this.state.workTasksDone.length}</p>
-                    <h2>High priority tasks done (priority rating >= 5): </h2><p>
+
+                <Container fluid className="w-75 summary rounded p-4 mb-3">
+                    <h2>Work Summary</h2>
+                    <p>Tasks done: &nbsp;<span>{this.state.workTasksDone.length}</span></p>
+                    <p>High priority tasks done (priority rating >= 5):&nbsp;<span className="high-priority-title">
                     {this.state.workTasksDone.filter(el =>
                         ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
-                        .length}</p>
+                        .length}</span></p>
 
-                    <ul>
+                    <ul className="d-flex flex-column align-items-center p-0">
                         Done tasks:
                         {this.state.workTasksDone
                             .sort((a,b) => (
                                 (+b.priority*1.25) + +b.formality + +b.urgency ) -
                                 ((+a.priority*1.25) + +a.formality + +a.urgency))
                             .map((el, index) => (
-                                <li key={index}>
-                                    Task: {el.taskName}, Priority: {el.priority},
-                                    Formality: {el.formality}, Urgency: {el.urgency},
-                                    Priority rating:
+                                <li className="summary-list p-1 mt-1" key={index}>
+                                    Task: {el.taskName} || Priority rating:&nbsp;
                                     {(+el.priority*1.25) + +el.formality + +el.urgency}
                                 </li>
                             ))}
                     </ul>
-                </div>
+                </Container>
 
-                <div>
-                    <h1>Growth Summary</h1>
-                    <h2>Tasks done: </h2><p>{this.state.growthTasksDone.length}</p>
-                    <h2>High priority tasks done (priority rating >= 5): </h2><p>
+                <Container fludi className="w-75 summary rounded p-4 mb-3">
+                    <h2>Growth Summary</h2>
+                    <p>Tasks done: &nbsp;<span>{this.state.growthTasksDone.length}</span></p>
+                    <p>High priority tasks done (priority rating >= 5): &nbsp;<span className="high-priority-title">
                     {this.state.growthTasksDone.filter(el =>
                         ((+el.priority*1.25) + +el.formality + +el.urgency) > 5)
-                        .length}</p>
+                        .length}</span></p>
 
-                    <ul>
+                    <ul className="d-flex flex-column align-items-center p-0">
                         Done tasks:
                         {this.state.growthTasksDone
                             .sort((a,b) => (
                                 (+b.priority*1.25) + +b.formality + +b.urgency ) -
                                 ((+a.priority*1.25) + +a.formality + +a.urgency))
                             .map((el, index) => (
-                                <li key={index}>
-                                    Task: {el.taskName}, Priority: {el.priority},
-                                    Formality: {el.formality}, Urgency: {el.urgency},
-                                    Priority rating:
+                                <li className="summary-list p-1 mt-1" key={index}>
+                                    Task: {el.taskName} || Priority rating:&nbsp;
                                     {(+el.priority*1.25) + +el.formality + +el.urgency}
                                 </li>
                             ))}
                     </ul>
-                </div>
-            </div>
+                </Container>
+            </Container>
 
 
         )
