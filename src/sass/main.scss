@@ -73,6 +73,15 @@ main h2 {
   font-style: italic;
 }
 
+//Singup Component
+
+.consent {
+  color: $error;
+  border: 1px solid $error;
+  border-radius: 5px;
+  background-color: $secondary-color;
+}
+
 //Priorities nav
 
 div.nav-tabs {

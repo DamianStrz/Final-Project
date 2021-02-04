@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { compose } from "recompose";
-import { Container, Button } from "react-bootstrap";
+import {Container, Button, InputGroup, Form} from "react-bootstrap";
 
 import { withFirebase } from "../Firebase"
 import * as ROUTES from "../../constants/routes";
 
 const SignUpPage = () => (
-    <Container className="row">
+    <Container className="row d-flex flex-column align-items-center">
         <h1 className="mb-4">Sign Up, have priorities!</h1>
-        <Container className="col">
+        <Container className="col w-75">
             <SignUpForm/>
         </Container>
     </Container>
@@ -20,6 +20,7 @@ const INITIAL_STATE = {
     email: "",
     passwordOne: "",
     passwordTwo: "",
+    isChecked: false,
     error: null
 };
 
@@ -72,11 +73,14 @@ class SignUpFormBase extends Component {
 
         this.setState({ [name]:value })
 
+        this.setState({isChecked: e.target.checked})
+
+
     };
 
     render() {
 
-        const {username, email, passwordOne, passwordTwo, error} = this.state;
+        const {username, email, passwordOne, passwordTwo, isChecked, error} = this.state;
 
         //Validation
 
@@ -86,9 +90,17 @@ class SignUpFormBase extends Component {
             email === "" ||
             username === ""
 
+        const isNotChecked = isChecked === false;
+
+        const consentEN = "This application is made for educational purpose. " +
+            " It is not recommended to pass any sensitive information or any other important for user data."
+
+        const consentPL = "Aplikacja została wykonana w celach edukacyjnych. Nie jest zalecane podawanie żadnych" +
+            " wrażliwych informacji w trakcie jej używania. Kilkając przycisk `Sign Up` użytkownik zgadza się" +
+            " na wpisanie podanych danych do bazy danych aplikacji i wykorzystywania ich w celu rozwoju aplikacji."
 
         return (
-            <form onSubmit={this.onSubmit}>
+            <form className="d-flex flex-column align-items-center" onSubmit={this.onSubmit}>
                 <input
                     className="mb-2"
                     name="username"
@@ -124,8 +136,21 @@ class SignUpFormBase extends Component {
                     type="password"
                     placeholder="Confirm password"
                 />
+                <Container fluid className="consent p-2 rounded w-75 mt-3 mb-3">
+                    <p>{consentEN}</p>
+                    <p>{consentPL}</p>
+                </Container>
 
-                <Button disabled={isInvalid} type="submit">Sign Up</Button>
+
+                <InputGroup className="mt-2 mb-2 d-flex justify-content-center">
+                    <InputGroup.Prepend>
+                        <InputGroup.Checkbox onChange={this.onChange}/>
+                        <InputGroup.Text className="w-100">I undestand and accept / Zrozumiałem/am i akcpetuję</InputGroup.Text>
+
+                    </InputGroup.Prepend>
+                </InputGroup>
+
+                <Button size="lg" className="mt-4" disabled={isInvalid || isNotChecked} type="submit">Sign Up</Button>
 
                 {error && <p className="error">{error.message}</p>}
             </form>
