@@ -105,6 +105,8 @@ div.nav-tabs > .nav-item > .nav-link.active {
 
 // Form
 
+
+
 input {
   border: 2px solid $main-color;
   border-radius: 0.2rem;
@@ -112,7 +114,7 @@ input {
 
 
   &:focus {
-    outline-color: $highlight-color;
+    outline: $highlight-color;
 
   }
 
@@ -121,10 +123,32 @@ input {
   }
 }
 
+
+
 //Add task component
-.task-input {
-  width: 300px;
-  max-width: 50%;
+
+.form-control {
+  color: $main-color;
+  &:focus {
+    border-color: $highlight-color;
+    box-shadow: 0 0 0 0.2rem transparentize($highlight-color, 0.75)
+  }
+
+  &::placeholder {
+    color: $secondary-color;
+  }
+}
+
+.input-group {
+  width: auto;
+}
+
+.input-group-text {
+  color: $main-color;
+}
+
+.ratings {
+  max-width: 50px;
 }
 
 li {
@@ -164,6 +188,8 @@ li {
   background-color: $bright;
   color: $main-color;
   border: 2px solid $highlight-color;
+  overflow-y: scroll;
+  max-height: 350px;
 }
 
 .summary-list {

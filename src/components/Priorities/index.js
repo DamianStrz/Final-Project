@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { Container } from "react-bootstrap";
+import {Container, Nav, Button, InputGroup, FormControl} from "react-bootstrap";
 
 import { withAuthorization } from "../Session"
 import * as ROUTES from "../../constants/routes"
-
-import { Nav, Button } from "react-bootstrap";
 
 const PrioritiesPage = () => (
     <Container fluid className="d-flex flex-column align-items-center w-75">
@@ -29,10 +27,6 @@ let INITIAL_STATE = {
     growthDataInitial: [],
     error: null
 }
-
-let DONE_PERSONAL_TASKS_ARRAY = [];
-let DONE_WORK_TASKS_ARRAY = [];
-let DONE_GROWTH_TASKS_ARRAY = [];
 
 let DELETED_PERSONAL_TASKS_ARRAY = [];
 let DELETED_WORK_TASKS_ARRAY = [];
@@ -269,62 +263,103 @@ class AddTask extends Component {
         const userID = this.props.firebase.auth.currentUser.uid;
 
         if (name === "personal") {
-            DONE_PERSONAL_TASKS_ARRAY = [...DONE_PERSONAL_TASKS_ARRAY,
-                ...this.state.personalDataInitial.filter(el => el.taskName === task)];
-
-            INITIAL_STATE = {...INITIAL_STATE,
-                personalDataInitial: [...this.state.personalDataInitial.filter(el => el.taskName !== task)]};
-
-            this.setState({...this.state,
-                personalDataInitial:[
-                    ...this.state.personalDataInitial.filter(el => el.taskName !== task)]
-            })
 
             this.props.firebase
                 .user(userID)
-                .update({
-                    personalData: [...this.state.personalDataInitial.filter(el => el.taskName !== task)],
-                    personalDataDone: [...this.state.personalDataInitial.filter(el => el.taskName === task)]
+                .once("value", snapshot => {
+                    let DONE_PERSONAL_TASKS_ARRAY;
+                    snapshot.val().personalDataDone === undefined
+                        ?DONE_PERSONAL_TASKS_ARRAY = []
+                        :DONE_PERSONAL_TASKS_ARRAY = [...snapshot.val().personalDataDone]
+
+                    DONE_PERSONAL_TASKS_ARRAY = [...DONE_PERSONAL_TASKS_ARRAY,
+                        ...this.state.personalDataInitial.filter(el => el.taskName === task)];
+
+                    INITIAL_STATE = {
+                        ...INITIAL_STATE,
+                        personalDataInitial: [...this.state.personalDataInitial.filter(el => el.taskName !== task)]
+                    };
+
+                    this.setState({
+                        ...this.state,
+                        personalDataInitial: [
+                            ...this.state.personalDataInitial.filter(el => el.taskName !== task)]
+                    })
+
+
+                    this.props.firebase
+                        .user(userID)
+                        .update({
+                            personalData: [...this.state.personalDataInitial.filter(el => el.taskName !== task)],
+                            personalDataDone: [...DONE_PERSONAL_TASKS_ARRAY]
+                        })
                 })
 
+
+
         } else if (name === "work") {
-            DONE_WORK_TASKS_ARRAY = [...DONE_WORK_TASKS_ARRAY,
-                ...this.state.workDataInitial.filter(el => el.taskName === task)];
-
-            INITIAL_STATE = {...INITIAL_STATE,
-                workDataInitial: [...this.state.workDataInitial.filter(el => el.taskName !== task )]};
-
-            this.setState({...this.state,
-                workDataInitial:[
-                    ...this.state.workDataInitial.filter(el => el.taskName !== task)]
-            });
 
             this.props.firebase
                 .user(userID)
-                .update({
-                    workData: [...this.state.workDataInitial.filter(el => el.taskName !== task)],
-                    workDataDone: [...this.state.workDataInitial.filter(el => el.taskName === task)]
-                });
+                .once("value", snapshot => {
+                    let DONE_WORK_TASKS_ARRAY;
+                    snapshot.val().workDataDone === undefined
+                        ? DONE_WORK_TASKS_ARRAY = []
+                        : DONE_WORK_TASKS_ARRAY = [...snapshot.val().workDataDone]
+
+                    DONE_WORK_TASKS_ARRAY = [...DONE_WORK_TASKS_ARRAY,
+                        ...this.state.workDataInitial.filter(el => el.taskName === task)];
+
+                    INITIAL_STATE = {
+                        ...INITIAL_STATE,
+                        workDataInitial: [...this.state.workDataInitial.filter(el => el.taskName !== task)]
+                    };
+
+                    this.setState({
+                        ...this.state,
+                        workDataInitial: [
+                            ...this.state.workDataInitial.filter(el => el.taskName !== task)]
+                    });
+
+                    this.props.firebase
+                        .user(userID)
+                        .update({
+                            workData: [...this.state.workDataInitial.filter(el => el.taskName !== task)],
+                            workDataDone: [...DONE_WORK_TASKS_ARRAY]
+                        });
+                })
+
 
         } else {
-            DONE_GROWTH_TASKS_ARRAY = [...DONE_GROWTH_TASKS_ARRAY,
-                ...this.state.growthDataInitial.filter(el => el.taskName === task)];
-
-            INITIAL_STATE = {...INITIAL_STATE,
-                growthDataInitial: [...this.state.growthDataInitial.filter(el => el.taskName !== task)]};
-
-            this.setState({...this.state, growthDataInitial:[
-                    ...this.state.growthDataInitial.filter(el => el.taskName !== task)]
-            })
-
             this.props.firebase
                 .user(userID)
-                .update({
-                    growthData: [...this.state.growthDataInitial.filter(el => el.taskName !== task)],
-                    growthDataDone: [...this.state.growthDataInitial.filter(el => el.taskName === task)]
-                });
-        }
+                .once("value", snapshot => {
+                    let DONE_GROWTH_TASKS_ARRAY;
+                    snapshot.val().growthDataDone === undefined
+                        ? DONE_GROWTH_TASKS_ARRAY = []
+                        : DONE_GROWTH_TASKS_ARRAY = [...snapshot.val().growthDataDone]
 
+                    DONE_GROWTH_TASKS_ARRAY = [...DONE_GROWTH_TASKS_ARRAY,
+                        ...this.state.growthDataInitial.filter(el => el.taskName === task)];
+
+                    INITIAL_STATE = {
+                        ...INITIAL_STATE,
+                        growthDataInitial: [...this.state.growthDataInitial.filter(el => el.taskName !== task)]
+                    };
+
+                    this.setState({
+                        ...this.state, growthDataInitial: [
+                            ...this.state.growthDataInitial.filter(el => el.taskName !== task)]
+                    })
+
+                    this.props.firebase
+                        .user(userID)
+                        .update({
+                            growthData: [...this.state.growthDataInitial.filter(el => el.taskName !== task)],
+                            growthDataDone: [...DONE_GROWTH_TASKS_ARRAY]
+                        });
+                })
+        }
     }
 
     componentDidMount() {
@@ -473,43 +508,68 @@ class AddTask extends Component {
                 </ul>
 
                 <h3 className="text-center w-75">Add your {`${this.props.tab}`} task </h3>
-                <form className="d-flex justify-content-between align-items-center w-75" onSubmit={this.onSubmit} name={this.props.tab}>
-                    <input className="mr-1 task-input"
-                        name="taskName"
-                        value={taskName}
-                        onChange={this.onChange}
-                        type="text"
-                        placeholder="Enter task name"
-                    />
-                    <input className="ml-1 mr-1"
-                        name="priority"
-                        value={priority}
-                        onChange={this.onChange}
-                        type="number"
-                        min="1"
-                        max="3"
-                        placeholder="Set priority from 1 - 3"
-                    />
-                    <input className="ml-1 mr-1"
-                        name="formality"
-                        value={formality}
-                        onChange={this.onChange}
-                        type="number"
-                        min="1"
-                        max="3"
-                        placeholder="Set formality from 1 - 3"
-                    />
+                <form className="d-flex flex-column align-items-center w-75" onSubmit={this.onSubmit} name={this.props.tab}>
+                    <InputGroup className="d-flex justify-content-center w-75">
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>Task name</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl
+                            id="taskName"
+                            name="taskName"
+                            value={taskName}
+                            onChange={this.onChange}
+                            type="text"
+                            placeholder="Enter task name"
+                        />
+                    </InputGroup>
+                    <div className="d-flex justify-content-between w-75 mt-1 mb-1">
+                        <InputGroup>
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>Priority</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                                className="ratings"
+                                name="priority"
+                                value={priority}
+                                onChange={this.onChange}
+                                type="number"
+                                min="1"
+                                max="3"
+                                placeholder="Set priority from 1 - 3"
+                            />
+                        </InputGroup>
 
-                    <input className="ml-1 mr-1"
-                        name="urgency"
-                        value={urgency}
-                        onChange={this.onChange}
-                        type="number"
-                        min="1"
-                        max="3"
-                        placeholder="Set urgency from 1 - 3"
-                    />
-                    <Button className="ml-1" name={this.props.tab} disabled={isInvalid} type="submit">Add task</Button>
+
+                    <InputGroup>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>Formality</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl className="ratings"
+                            name="formality"
+                            value={formality}
+                            onChange={this.onChange}
+                            type="number"
+                            min="1"
+                            max="3"
+                            placeholder="Set formality from 1 - 3"
+                        />
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>Urgency</InputGroup.Text>
+                        </InputGroup.Prepend>
+                        <FormControl className="ratings"
+                            name="urgency"
+                            value={urgency}
+                            onChange={this.onChange}
+                            type="number"
+                            min="1"
+                            max="3"
+                            placeholder="Set urgency from 1 - 3"
+                        />
+                    </InputGroup>
+                    </div>
+                    <Button block size="lg" className="ml-1 w-75" name={this.props.tab} disabled={isInvalid} type="submit">Add task</Button>
                 </form>
             </Container>
         )
@@ -644,7 +704,7 @@ class TasksSummary extends Component {
                     </ul>
                 </Container>
 
-                <Container fludi className="w-75 summary rounded p-4 mb-3">
+                <Container fluid className="w-75 summary rounded p-4 mb-3">
                     <h2>Growth Summary</h2>
                     <p>Tasks done: &nbsp;<span>{this.state.growthTasksDone.length}</span></p>
                     <p>High priority tasks done (priority rating >= 5): &nbsp;<span className="high-priority-title">
