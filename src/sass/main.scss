@@ -188,7 +188,7 @@ li {
   background-color: $bright;
   color: $main-color;
   border: 2px solid $highlight-color;
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 350px;
 }
 
