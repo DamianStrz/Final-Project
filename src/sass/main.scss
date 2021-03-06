@@ -39,6 +39,11 @@ a {
   }
 }
 
+a.inactive-link {
+  pointer-events: none;
+  cursor:default;
+}
+
 .btn-primary, .btn-sm {
   background-color: $highlight-color;
   border: none;
@@ -153,6 +158,10 @@ input {
 
 li {
   list-style: none;
+}
+
+ul.privacy-list > li {
+  list-style: circle;
 }
 
 .high-priority-task {

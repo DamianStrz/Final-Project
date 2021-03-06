@@ -50,7 +50,7 @@ const NavigationNonAuth = () => (
             <Nav.Link as={NavLink} to={ROUTES.LANDING}>Landing page</Nav.Link>
         </Nav.Item>
         <Nav.Item>
-            <Nav.Link eventKey={ROUTES.SIGN_IN} as={NavLink} to={ROUTES.SIGN_IN}>Sign In</Nav.Link>
+            <Nav.Link eventKey={ROUTES.SIGN_IN} as={NavLink} to={ROUTES.SIGN_IN} id="active">Sign In</Nav.Link>
         </Nav.Item>
     </Nav>
 )

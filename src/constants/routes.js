@@ -5,6 +5,8 @@ export const PRIORITIES = "/priorities";
 export const ACCOUNT = "/account";
 export const ADMIN = "/admin"
 export const PASSWORD_FORGET = "/pw-forget";
+export const PRIVACY_POLICY = "/privacy-policy";
+export const COOKIES_POLICY = "/cookies-policy";
 
 export const PRIORITIES_PERSONAL = "/priorities/personal"
 export const PRIORITIES_WORK = "/priorities/work"

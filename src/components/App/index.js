@@ -19,6 +19,8 @@ import AccountPage from "../Account";
 import AdminPage from "../Admin";
 import PasswordForgetPage from "../PasswordForget";
 
+import { PrivacyPolicy, CookiesPolicy, PrivacyLink, CookiesLink } from "../CookiesPrivacy";
+
 import * as ROUTES from "../../constants/routes";
 
 import { withAuthentication } from "../Session";
@@ -56,13 +58,19 @@ const App = () => (
                 <Route path={ROUTES.ADMIN} component={AdminPage}/>
                 <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage}/>
             </Switch>
+            <Switch>
+                <Route path={ROUTES.PRIVACY_POLICY} component={PrivacyPolicy}/>
+                <Route path={ROUTES.COOKIES_POLICY} component={CookiesPolicy}/>
+            </Switch>
         </Container>
 
         <hr/>
 
         <Container fluid as="footer">
+
+
             <p className="text-center">This application is made for educational purposes. It is not recommended to pass any sensitive information
-                to inputs or any other important for users information.<span><br/> &copy; Made by Damian Strzałkowski</span></p>
+                to inputs or any other important for users information. Read more: <PrivacyLink/> and <CookiesLink/><span><br/> &copy; Made by Damian Strzałkowski</span></p>
 
         </Container>
 
