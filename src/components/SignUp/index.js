@@ -74,7 +74,7 @@ class SignUpFormBase extends Component {
         this.setState({ [name]:value })
 
         this.setState({isChecked: e.target.checked})
-        
+
 
 
 
