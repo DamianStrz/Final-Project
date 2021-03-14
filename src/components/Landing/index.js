@@ -25,7 +25,9 @@ class LandingPage extends Component {
 
     componentDidMount() {
 
-        this.state.hidden === false && document.getElementById("active").classList.add("inactive-link")
+        const signInLink = document.getElementById("active");
+
+        (this.state.hidden === false && signInLink) && document.getElementById("active").classList.add("inactive-link")
 
     }
 
